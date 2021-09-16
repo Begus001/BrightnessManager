@@ -8,13 +8,50 @@
     <property name="step-increment">1</property>
     <property name="page-increment">10</property>
   </object>
+  <object class="GtkAdjustment" id="adjI2C1">
+    <property name="upper">100</property>
+    <property name="step-increment">1</property>
+    <property name="page-increment">10</property>
+  </object>
+  <object class="GtkAdjustment" id="adjI2C2">
+    <property name="upper">100</property>
+    <property name="step-increment">1</property>
+    <property name="page-increment">10</property>
+  </object>
+  <object class="GtkAdjustment" id="adjI2C3">
+    <property name="upper">100</property>
+    <property name="step-increment">1</property>
+    <property name="page-increment">10</property>
+  </object>
+  <object class="GtkAdjustment" id="adjI2C4">
+    <property name="upper">100</property>
+    <property name="step-increment">1</property>
+    <property name="page-increment">10</property>
+  </object>
+  <object class="GtkAdjustment" id="adjI2C5">
+    <property name="upper">100</property>
+    <property name="step-increment">1</property>
+    <property name="page-increment">10</property>
+  </object>
+  <object class="GtkAdjustment" id="adjI2C6">
+    <property name="upper">100</property>
+    <property name="step-increment">1</property>
+    <property name="page-increment">10</property>
+  </object>
   <object class="GtkAdjustment" id="adjManualBrightness">
     <property name="upper">100</property>
     <property name="value">100</property>
     <property name="step-increment">1</property>
     <property name="page-increment">10</property>
   </object>
-  <object class="GtkPopover" id="winMenu">
+  <object class="GtkAdjustment" id="adjManualMonitor">
+    <property name="lower">1</property>
+    <property name="upper">6</property>
+    <property name="value">1</property>
+    <property name="step-increment">1</property>
+    <property name="page-increment">10</property>
+  </object>
+  <object class="GtkPopover" id="popManual">
     <property name="can-focus">False</property>
     <child>
       <object class="GtkBox">
@@ -29,7 +66,7 @@
             <property name="margin-end">10</property>
             <property name="margin-top">10</property>
             <property name="margin-bottom">10</property>
-            <property name="label" translatable="yes">Manual brightness</property>
+            <property name="label" translatable="yes">Manual Brightness</property>
           </object>
           <packing>
             <property name="expand">False</property>
@@ -57,7 +94,12 @@
             <property name="can-focus">True</property>
             <property name="halign">center</property>
             <property name="margin-bottom">10</property>
+            <property name="max-length">1</property>
+            <property name="width-chars">1</property>
+            <property name="max-width-chars">1</property>
+            <property name="input-purpose">number</property>
             <property name="orientation">vertical</property>
+            <property name="adjustment">adjManualMonitor</property>
             <property name="snap-to-ticks">True</property>
             <property name="numeric">True</property>
           </object>
@@ -125,6 +167,13 @@
       </object>
     </child>
   </object>
+  <object class="GtkAdjustment" id="adjMaxDisplays">
+    <property name="lower">1</property>
+    <property name="upper">6</property>
+    <property name="value">1</property>
+    <property name="step-increment">1</property>
+    <property name="page-increment">10</property>
+  </object>
   <object class="GtkAdjustment" id="adjMonitor">
     <property name="lower">1</property>
     <property name="upper">6</property>
@@ -158,6 +207,371 @@
     <property name="upper">59</property>
     <property name="step-increment">1</property>
     <property name="page-increment">10</property>
+  </object>
+  <object class="GtkAdjustment" id="adjUpdateInterval">
+    <property name="lower">1</property>
+    <property name="upper">60</property>
+    <property name="value">5</property>
+    <property name="step-increment">1</property>
+    <property name="page-increment">10</property>
+  </object>
+  <object class="GtkPopover" id="popSettings">
+    <property name="can-focus">False</property>
+    <child>
+      <object class="GtkBox">
+        <property name="visible">True</property>
+        <property name="can-focus">False</property>
+        <property name="orientation">vertical</property>
+        <child>
+          <object class="GtkStackSwitcher" id="stksSettings">
+            <property name="visible">True</property>
+            <property name="can-focus">False</property>
+            <property name="halign">center</property>
+            <property name="valign">center</property>
+            <property name="margin-start">10</property>
+            <property name="margin-end">10</property>
+            <property name="margin-top">10</property>
+            <property name="margin-bottom">20</property>
+            <property name="homogeneous">True</property>
+            <property name="stack">stkSettings</property>
+          </object>
+          <packing>
+            <property name="expand">False</property>
+            <property name="fill">True</property>
+            <property name="position">0</property>
+          </packing>
+        </child>
+        <child>
+          <object class="GtkStack" id="stkSettings">
+            <property name="visible">True</property>
+            <property name="can-focus">False</property>
+            <child>
+              <!-- n-columns=2 n-rows=2 -->
+              <object class="GtkGrid">
+                <property name="visible">True</property>
+                <property name="can-focus">False</property>
+                <property name="halign">center</property>
+                <property name="valign">center</property>
+                <child>
+                  <object class="GtkSpinButton" id="spbtMaxMonitors">
+                    <property name="width-request">50</property>
+                    <property name="visible">True</property>
+                    <property name="can-focus">True</property>
+                    <property name="halign">center</property>
+                    <property name="valign">center</property>
+                    <property name="margin-start">10</property>
+                    <property name="margin-end">10</property>
+                    <property name="margin-top">10</property>
+                    <property name="margin-bottom">10</property>
+                    <property name="max-length">1</property>
+                    <property name="width-chars">1</property>
+                    <property name="max-width-chars">1</property>
+                    <property name="input-purpose">digits</property>
+                    <property name="orientation">vertical</property>
+                    <property name="adjustment">adjMaxDisplays</property>
+                    <property name="snap-to-ticks">True</property>
+                    <property name="numeric">True</property>
+                    <signal name="value-changed" handler="spbtMaxMonitors_value_changed_cb" swapped="no"/>
+                  </object>
+                  <packing>
+                    <property name="left-attach">0</property>
+                    <property name="top-attach">1</property>
+                  </packing>
+                </child>
+                <child>
+                  <object class="GtkLabel">
+                    <property name="visible">True</property>
+                    <property name="can-focus">False</property>
+                    <property name="margin-start">10</property>
+                    <property name="margin-end">10</property>
+                    <property name="margin-bottom">5</property>
+                    <property name="label" translatable="yes">Max Displays</property>
+                  </object>
+                  <packing>
+                    <property name="left-attach">0</property>
+                    <property name="top-attach">0</property>
+                  </packing>
+                </child>
+                <child>
+                  <object class="GtkLabel">
+                    <property name="visible">True</property>
+                    <property name="can-focus">False</property>
+                    <property name="margin-start">10</property>
+                    <property name="margin-end">10</property>
+                    <property name="margin-bottom">5</property>
+                    <property name="label" translatable="yes">Update Interval</property>
+                  </object>
+                  <packing>
+                    <property name="left-attach">1</property>
+                    <property name="top-attach">0</property>
+                  </packing>
+                </child>
+                <child>
+                  <object class="GtkSpinButton" id="spbtUpdateInterval">
+                    <property name="width-request">50</property>
+                    <property name="visible">True</property>
+                    <property name="can-focus">True</property>
+                    <property name="halign">center</property>
+                    <property name="valign">center</property>
+                    <property name="margin-start">10</property>
+                    <property name="margin-end">10</property>
+                    <property name="margin-top">10</property>
+                    <property name="margin-bottom">10</property>
+                    <property name="max-length">2</property>
+                    <property name="width-chars">2</property>
+                    <property name="max-width-chars">2</property>
+                    <property name="input-purpose">digits</property>
+                    <property name="orientation">vertical</property>
+                    <property name="adjustment">adjUpdateInterval</property>
+                    <property name="snap-to-ticks">True</property>
+                    <property name="numeric">True</property>
+                    <signal name="value-changed" handler="spbtUpdateInterval_value_changed_cb" swapped="no"/>
+                  </object>
+                  <packing>
+                    <property name="left-attach">1</property>
+                    <property name="top-attach">1</property>
+                  </packing>
+                </child>
+              </object>
+              <packing>
+                <property name="name">general</property>
+                <property name="title" translatable="yes">General</property>
+              </packing>
+            </child>
+            <child>
+              <object class="GtkBox">
+                <property name="visible">True</property>
+                <property name="can-focus">False</property>
+                <property name="orientation">vertical</property>
+                <child>
+                  <object class="GtkLabel">
+                    <property name="visible">True</property>
+                    <property name="can-focus">False</property>
+                    <property name="margin-bottom">10</property>
+                    <property name="label" translatable="yes">I2C device IDs (usually auto detected)</property>
+                  </object>
+                  <packing>
+                    <property name="expand">False</property>
+                    <property name="fill">True</property>
+                    <property name="position">0</property>
+                  </packing>
+                </child>
+                <child>
+                  <!-- n-columns=6 n-rows=2 -->
+                  <object class="GtkGrid">
+                    <property name="visible">True</property>
+                    <property name="can-focus">False</property>
+                    <property name="halign">center</property>
+                    <property name="column-homogeneous">True</property>
+                    <child>
+                      <object class="GtkLabel">
+                        <property name="visible">True</property>
+                        <property name="can-focus">False</property>
+                        <property name="margin-bottom">5</property>
+                        <property name="label" translatable="yes">1</property>
+                      </object>
+                      <packing>
+                        <property name="left-attach">0</property>
+                        <property name="top-attach">0</property>
+                      </packing>
+                    </child>
+                    <child>
+                      <object class="GtkLabel">
+                        <property name="visible">True</property>
+                        <property name="can-focus">False</property>
+                        <property name="margin-bottom">5</property>
+                        <property name="label" translatable="yes">2</property>
+                      </object>
+                      <packing>
+                        <property name="left-attach">1</property>
+                        <property name="top-attach">0</property>
+                      </packing>
+                    </child>
+                    <child>
+                      <object class="GtkLabel">
+                        <property name="visible">True</property>
+                        <property name="can-focus">False</property>
+                        <property name="margin-bottom">5</property>
+                        <property name="label" translatable="yes">3</property>
+                      </object>
+                      <packing>
+                        <property name="left-attach">2</property>
+                        <property name="top-attach">0</property>
+                      </packing>
+                    </child>
+                    <child>
+                      <object class="GtkLabel">
+                        <property name="visible">True</property>
+                        <property name="can-focus">False</property>
+                        <property name="margin-bottom">5</property>
+                        <property name="label" translatable="yes">4</property>
+                      </object>
+                      <packing>
+                        <property name="left-attach">3</property>
+                        <property name="top-attach">0</property>
+                      </packing>
+                    </child>
+                    <child>
+                      <object class="GtkLabel">
+                        <property name="visible">True</property>
+                        <property name="can-focus">False</property>
+                        <property name="margin-bottom">5</property>
+                        <property name="label" translatable="yes">5</property>
+                      </object>
+                      <packing>
+                        <property name="left-attach">4</property>
+                        <property name="top-attach">0</property>
+                      </packing>
+                    </child>
+                    <child>
+                      <object class="GtkLabel">
+                        <property name="visible">True</property>
+                        <property name="can-focus">False</property>
+                        <property name="margin-bottom">5</property>
+                        <property name="label" translatable="yes">6</property>
+                      </object>
+                      <packing>
+                        <property name="left-attach">5</property>
+                        <property name="top-attach">0</property>
+                      </packing>
+                    </child>
+                    <child>
+                      <object class="GtkSpinButton" id="spbtI2C1">
+                        <property name="width-request">50</property>
+                        <property name="visible">True</property>
+                        <property name="can-focus">True</property>
+                        <property name="halign">center</property>
+                        <property name="valign">center</property>
+                        <property name="margin-start">10</property>
+                        <property name="margin-end">5</property>
+                        <property name="margin-bottom">10</property>
+                        <property name="orientation">vertical</property>
+                        <property name="adjustment">adjI2C1</property>
+                        <signal name="value-changed" handler="spbtI2C1_value_changed_cb" swapped="no"/>
+                      </object>
+                      <packing>
+                        <property name="left-attach">0</property>
+                        <property name="top-attach">1</property>
+                      </packing>
+                    </child>
+                    <child>
+                      <object class="GtkSpinButton" id="spbtI2C2">
+                        <property name="width-request">50</property>
+                        <property name="visible">True</property>
+                        <property name="can-focus">True</property>
+                        <property name="halign">center</property>
+                        <property name="valign">center</property>
+                        <property name="margin-start">5</property>
+                        <property name="margin-end">5</property>
+                        <property name="margin-bottom">10</property>
+                        <property name="orientation">vertical</property>
+                        <property name="adjustment">adjI2C2</property>
+                        <signal name="value-changed" handler="spbtI2C2_value_changed_cb" swapped="no"/>
+                      </object>
+                      <packing>
+                        <property name="left-attach">1</property>
+                        <property name="top-attach">1</property>
+                      </packing>
+                    </child>
+                    <child>
+                      <object class="GtkSpinButton" id="spbtI2C3">
+                        <property name="width-request">50</property>
+                        <property name="visible">True</property>
+                        <property name="can-focus">True</property>
+                        <property name="halign">center</property>
+                        <property name="valign">center</property>
+                        <property name="margin-start">5</property>
+                        <property name="margin-end">5</property>
+                        <property name="margin-bottom">10</property>
+                        <property name="orientation">vertical</property>
+                        <property name="adjustment">adjI2C3</property>
+                        <signal name="value-changed" handler="spbtI2C3_value_changed_cb" swapped="no"/>
+                      </object>
+                      <packing>
+                        <property name="left-attach">2</property>
+                        <property name="top-attach">1</property>
+                      </packing>
+                    </child>
+                    <child>
+                      <object class="GtkSpinButton" id="spbtI2C4">
+                        <property name="width-request">50</property>
+                        <property name="visible">True</property>
+                        <property name="can-focus">True</property>
+                        <property name="halign">center</property>
+                        <property name="valign">center</property>
+                        <property name="margin-start">5</property>
+                        <property name="margin-end">5</property>
+                        <property name="margin-bottom">10</property>
+                        <property name="orientation">vertical</property>
+                        <property name="adjustment">adjI2C4</property>
+                        <signal name="value-changed" handler="spbtI2C4_value_changed_cb" swapped="no"/>
+                      </object>
+                      <packing>
+                        <property name="left-attach">3</property>
+                        <property name="top-attach">1</property>
+                      </packing>
+                    </child>
+                    <child>
+                      <object class="GtkSpinButton" id="spbtI2C5">
+                        <property name="width-request">50</property>
+                        <property name="visible">True</property>
+                        <property name="can-focus">True</property>
+                        <property name="halign">center</property>
+                        <property name="valign">center</property>
+                        <property name="margin-start">5</property>
+                        <property name="margin-end">5</property>
+                        <property name="margin-bottom">10</property>
+                        <property name="orientation">vertical</property>
+                        <property name="adjustment">adjI2C5</property>
+                        <signal name="value-changed" handler="spbtI2C5_value_changed_cb" swapped="no"/>
+                      </object>
+                      <packing>
+                        <property name="left-attach">4</property>
+                        <property name="top-attach">1</property>
+                      </packing>
+                    </child>
+                    <child>
+                      <object class="GtkSpinButton" id="spbtI2C6">
+                        <property name="width-request">50</property>
+                        <property name="visible">True</property>
+                        <property name="can-focus">True</property>
+                        <property name="halign">center</property>
+                        <property name="valign">center</property>
+                        <property name="margin-start">5</property>
+                        <property name="margin-end">10</property>
+                        <property name="margin-bottom">10</property>
+                        <property name="orientation">vertical</property>
+                        <property name="adjustment">adjI2C6</property>
+                        <signal name="value-changed" handler="spbtI2C6_value_changed_cb" swapped="no"/>
+                      </object>
+                      <packing>
+                        <property name="left-attach">5</property>
+                        <property name="top-attach">1</property>
+                      </packing>
+                    </child>
+                  </object>
+                  <packing>
+                    <property name="expand">False</property>
+                    <property name="fill">True</property>
+                    <property name="position">1</property>
+                  </packing>
+                </child>
+              </object>
+              <packing>
+                <property name="name">i2c</property>
+                <property name="title" translatable="yes">I2C</property>
+                <property name="position">1</property>
+              </packing>
+            </child>
+          </object>
+          <packing>
+            <property name="expand">False</property>
+            <property name="fill">True</property>
+            <property name="position">1</property>
+          </packing>
+        </child>
+      </object>
+    </child>
   </object>
   <object class="GtkImage" id="imgCancel">
     <property name="visible">True</property>
@@ -247,6 +661,7 @@
                         <property name="wrap">True</property>
                         <property name="update-policy">if-valid</property>
                         <property name="value">20</property>
+                        <signal name="value-changed" handler="spbtSunsetHour_value_changed_cb" swapped="no"/>
                       </object>
                       <packing>
                         <property name="expand">False</property>
@@ -269,6 +684,7 @@
                         <property name="numeric">True</property>
                         <property name="wrap">True</property>
                         <property name="update-policy">if-valid</property>
+                        <signal name="value-changed" handler="spbtSunsetMinute_value_changed_cb" swapped="no"/>
                       </object>
                       <packing>
                         <property name="expand">False</property>
@@ -337,6 +753,7 @@
                         <property name="wrap">True</property>
                         <property name="update-policy">if-valid</property>
                         <property name="value">6</property>
+                        <signal name="value-changed" handler="spbtSunriseHour_value_changed_cb" swapped="no"/>
                       </object>
                       <packing>
                         <property name="expand">False</property>
@@ -359,6 +776,7 @@
                         <property name="numeric">True</property>
                         <property name="wrap">True</property>
                         <property name="update-policy">if-valid</property>
+                        <signal name="value-changed" handler="spbtSunriseMinute_value_changed_cb" swapped="no"/>
                       </object>
                       <packing>
                         <property name="expand">False</property>
@@ -430,6 +848,7 @@
                     <property name="snap-to-ticks">True</property>
                     <property name="numeric">True</property>
                     <property name="update-policy">if-valid</property>
+                    <signal name="value-changed" handler="spbtNightBrightness_value_changed_cb" swapped="no"/>
                   </object>
                   <packing>
                     <property name="expand">False</property>
@@ -481,6 +900,7 @@
                     <property name="numeric">True</property>
                     <property name="update-policy">if-valid</property>
                     <property name="value">100</property>
+                    <signal name="value-changed" handler="spbtDayBrightness_value_changed_cb" swapped="no"/>
                   </object>
                   <packing>
                     <property name="expand">False</property>
@@ -506,12 +926,14 @@
             <property name="visible">True</property>
             <property name="can-focus">False</property>
             <child>
-              <object class="GtkSpinButton" id="spbtMonitor">
+              <object class="GtkLabel">
                 <property name="visible">True</property>
-                <property name="can-focus">True</property>
+                <property name="can-focus">False</property>
+                <property name="halign">end</property>
+                <property name="valign">center</property>
                 <property name="margin-start">10</property>
                 <property name="margin-bottom">10</property>
-                <property name="adjustment">adjMonitor</property>
+                <property name="label" translatable="yes">Monitor:</property>
               </object>
               <packing>
                 <property name="expand">False</property>
@@ -520,14 +942,13 @@
               </packing>
             </child>
             <child>
-              <object class="GtkButton" id="btSetMonitor">
-                <property name="label" translatable="yes">Set Monitor</property>
-                <property name="name">btSetMonitor</property>
+              <object class="GtkSpinButton" id="spbtMonitor">
                 <property name="visible">True</property>
                 <property name="can-focus">True</property>
-                <property name="receives-default">True</property>
                 <property name="margin-start">5</property>
                 <property name="margin-bottom">10</property>
+                <property name="adjustment">adjMonitor</property>
+                <signal name="value-changed" handler="spbtMonitor_value_changed_cb" swapped="no"/>
               </object>
               <packing>
                 <property name="expand">False</property>
@@ -536,14 +957,16 @@
               </packing>
             </child>
             <child>
-              <object class="GtkButton">
+              <object class="GtkButton" id="btApplyToAll">
                 <property name="label" translatable="yes">Apply to all</property>
                 <property name="visible">True</property>
                 <property name="can-focus">True</property>
                 <property name="receives-default">True</property>
                 <property name="tooltip-text" translatable="yes">Apply current settings to all monitors (will not be saved to file)</property>
+                <property name="margin-start">20</property>
                 <property name="margin-end">10</property>
                 <property name="margin-bottom">10</property>
+                <signal name="clicked" handler="btApplyToAll_clicked_cb" swapped="no"/>
               </object>
               <packing>
                 <property name="expand">False</property>
@@ -566,6 +989,7 @@
         <property name="visible">True</property>
         <property name="can-focus">False</property>
         <property name="title" translatable="yes">Brightness Manager</property>
+        <property name="spacing">5</property>
         <property name="show-close-button">True</property>
         <child>
           <object class="GtkSwitch" id="swEnabled">
@@ -574,6 +998,47 @@
             <property name="tooltip-text" translatable="yes">Enable brightness regulation</property>
             <signal name="state-set" handler="swEnabled_state_set_cb" swapped="no"/>
           </object>
+        </child>
+        <child>
+          <object class="GtkMenuButton" id="btSettings">
+            <property name="visible">True</property>
+            <property name="can-focus">True</property>
+            <property name="focus-on-click">False</property>
+            <property name="receives-default">True</property>
+            <property name="popover">popSettings</property>
+            <child>
+              <object class="GtkImage" id="imgSettings">
+                <property name="visible">True</property>
+                <property name="can-focus">False</property>
+                <property name="icon-name">applications-system</property>
+              </object>
+            </child>
+          </object>
+          <packing>
+            <property name="pack-type">end</property>
+            <property name="position">1</property>
+          </packing>
+        </child>
+        <child>
+          <object class="GtkMenuButton" id="btMenu">
+            <property name="visible">True</property>
+            <property name="can-focus">True</property>
+            <property name="focus-on-click">False</property>
+            <property name="receives-default">True</property>
+            <property name="tooltip-text" translatable="yes">Manual brightness setting</property>
+            <property name="popover">popManual</property>
+            <child>
+              <object class="GtkImage" id="imgManual">
+                <property name="visible">True</property>
+                <property name="can-focus">False</property>
+                <property name="icon-name">computer</property>
+              </object>
+            </child>
+          </object>
+          <packing>
+            <property name="pack-type">end</property>
+            <property name="position">2</property>
+          </packing>
         </child>
         <child>
           <object class="GtkButton" id="btApply">
@@ -586,7 +1051,7 @@
             <signal name="clicked" handler="btApply_clicked_cb" swapped="no"/>
           </object>
           <packing>
-            <property name="position">1</property>
+            <property name="position">3</property>
           </packing>
         </child>
         <child>
@@ -596,26 +1061,10 @@
             <property name="receives-default">True</property>
             <property name="tooltip-text" translatable="yes">Revert to old configuration</property>
             <property name="image">imgCancel</property>
+            <signal name="clicked" handler="btCancel_clicked_cb" swapped="no"/>
           </object>
           <packing>
-            <property name="position">2</property>
-          </packing>
-        </child>
-        <child>
-          <object class="GtkMenuButton" id="btMenu">
-            <property name="visible">True</property>
-            <property name="can-focus">True</property>
-            <property name="focus-on-click">False</property>
-            <property name="receives-default">True</property>
-            <property name="tooltip-text" translatable="yes">Manual brightness setting</property>
-            <property name="popover">winMenu</property>
-            <child>
-              <placeholder/>
-            </child>
-          </object>
-          <packing>
-            <property name="pack-type">end</property>
-            <property name="position">3</property>
+            <property name="position">4</property>
           </packing>
         </child>
       </object>
