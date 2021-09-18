@@ -170,7 +170,7 @@
   <object class="GtkAdjustment" id="adjMaxDisplays">
     <property name="lower">1</property>
     <property name="upper">6</property>
-    <property name="value">1</property>
+    <property name="value">3</property>
     <property name="step-increment">1</property>
     <property name="page-increment">10</property>
   </object>
@@ -271,6 +271,7 @@
                     <property name="adjustment">adjMaxDisplays</property>
                     <property name="snap-to-ticks">True</property>
                     <property name="numeric">True</property>
+                    <property name="value">3</property>
                     <signal name="value-changed" handler="spbtMaxMonitors_value_changed_cb" swapped="no"/>
                   </object>
                   <packing>
@@ -325,6 +326,7 @@
                     <property name="adjustment">adjUpdateInterval</property>
                     <property name="snap-to-ticks">True</property>
                     <property name="numeric">True</property>
+                    <property name="value">5</property>
                     <signal name="value-changed" handler="spbtUpdateInterval_value_changed_cb" swapped="no"/>
                   </object>
                   <packing>
@@ -1020,7 +1022,7 @@
           </packing>
         </child>
         <child>
-          <object class="GtkMenuButton" id="btMenu">
+          <object class="GtkMenuButton" id="btManual">
             <property name="visible">True</property>
             <property name="can-focus">True</property>
             <property name="focus-on-click">False</property>

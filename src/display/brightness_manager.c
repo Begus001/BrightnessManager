@@ -1,25 +1,34 @@
-#include <stdio.h>
 #include <pthread.h>
+#include <stdio.h>
+#include <time.h>
 #include <unistd.h>
 
+#include "../config/config.h"
+#include "../ui/ui.h"
 #include "brightness_manager.h"
-#include "display.h"
-
-gboolean bm_enabled = false;
 
 static pthread_t worker;
 
-void bm_set_enabled(gboolean val)
+gboolean bm_enabled = false;
+
+void bm_set_enabled(gboolean val) { bm_enabled = val; }
+
+static void update()
 {
-	bm_enabled = val;
+	printf("test\n");
+	fflush(stdout);
 }
 
 static void *brightness_worker()
 {
+	time_t start = time(NULL);
 	while (true) {
-		usleep(100000);
+		usleep(1000);
 		if (bm_enabled) {
-			// code
+			if (difftime(time(NULL), start) >= DEFAULT_UPDATE_INTERVAL) {
+				start = time(NULL);
+				update();
+			}
 		}
 	}
 
@@ -29,5 +38,6 @@ static void *brightness_worker()
 void bm_init()
 {
 	bm_enabled = false;
+
 	pthread_create(&worker, NULL, brightness_worker, NULL);
 }
