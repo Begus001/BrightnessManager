@@ -76,6 +76,8 @@ void btCancel_clicked_cb(GtkWidget *widget, gpointer data)
 
 void btApplyToAll_clicked_cb(GtkWidget *widget, gpointer data)
 {
+	cfg_apply_to_all(current_monitor_index);
+	
 	printf("UI: btApplyToAll_clicked\n");
 }
 

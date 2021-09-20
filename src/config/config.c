@@ -96,6 +96,18 @@ void cfg_notify_program_config_changed()
 	free(buf);
 }
 
+void cfg_apply_to_all(int display_id_to_copy)
+{
+	cfg_notify_display_configs_changed();
+	
+	for (int i = 0; i < MAX_DISPLAYS; i++) {
+		if (i == display_id_to_copy)
+			continue;
+
+		display_configs[i] = display_configs[display_id_to_copy];
+	}
+}
+
 void cfg_notify_display_configs_changed()
 {
 	if (display_configs_changed)

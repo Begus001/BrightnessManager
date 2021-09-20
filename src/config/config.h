@@ -41,6 +41,8 @@ program_config_t *cfg_get_program_config();
 
 void cfg_notify_program_config_changed();
 
+void cfg_apply_to_all(int display_id_to_copy);
+
 void cfg_notify_display_configs_changed();
 void cfg_notify_display_configs_applied();
 void cfg_notify_display_configs_cancelled();
