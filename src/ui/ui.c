@@ -275,6 +275,15 @@ void spbtI2C6_value_changed_cb(GtkWidget *widget, gpointer data)
 	printf("UI: spbtI2C6_value_changed\n");
 }
 
+void btAutoDetect_clicked_cb(GtkWidget *widget, gpointer data)
+{
+	printf("UI: btAutoDetect_clicked\n");
+
+	cfg_auto_detect_i2c();
+
+	refresh_config();
+}
+
 void swEnabled_state_set_cb(GtkWidget *widget, gpointer data)
 {
 	gboolean state;

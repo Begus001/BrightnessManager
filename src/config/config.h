@@ -47,6 +47,8 @@ void cfg_notify_display_configs_changed();
 void cfg_notify_display_configs_applied();
 void cfg_notify_display_configs_cancelled();
 
+void cfg_auto_detect_i2c();
+
 void cfg_init();
 
 #endif

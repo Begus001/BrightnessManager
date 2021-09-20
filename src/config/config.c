@@ -99,7 +99,7 @@ void cfg_notify_program_config_changed()
 void cfg_apply_to_all(int display_id_to_copy)
 {
 	cfg_notify_display_configs_changed();
-	
+
 	for (int i = 0; i < MAX_DISPLAYS; i++) {
 		if (i == display_id_to_copy)
 			continue;
@@ -299,12 +299,48 @@ static void create_default_config_file()
 	}
 }
 
+void cfg_auto_detect_i2c()
+{
+	FILE *pipe;
+	char cmd_output[4096];
+	char buf[128];
+
+	printf("CFG: Auto-detecting I2C busses\n");
+
+	pipe = popen("sudo ddccontrol -p 2>/dev/null | grep \"Device: dev:/dev/i2c-\"", "r");
+
+	assert(pipe);
+
+	while (fgets(buf, sizeof(buf), pipe)) {
+		strcat(cmd_output, buf);
+	}
+
+	char *p = strtok(cmd_output, "-\n");
+
+	int i = 1, k = 2;
+	do {
+		if (!(i % 3)) {
+			printf("  %d: %s\n", k - 1, p);
+			unsigned int *cfg_ptr = (unsigned int *)&program_config;
+			cfg_ptr[k++] = atoi(p);
+		}
+
+		p = strtok(NULL, "-\n");
+		i++;
+	} while (p);
+
+	cfg_notify_program_config_changed();
+
+	pclose(pipe);
+}
+
 void cfg_init()
 {
 	FILE *file = fopen(CONFIG_FILE_PATH, "r+");
 
 	if (file == NULL) {
 		create_default_config_file();
+		cfg_auto_detect_i2c();
 	}
 
 	load_config();
