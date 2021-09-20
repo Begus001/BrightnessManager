@@ -1,5 +1,5 @@
 GCC = /usr/bin/gcc
-CFLAGS = -O2 -Wall `pkg-config --cflags --libs gtk+-3.0` -rdynamic -Wno-unused-result -g -DGDK_DEBUG=nograbs -pthread -lexpat
+CFLAGS = -O2 -Wall -Wno-unused-function -Wno-unused-variable `pkg-config --cflags --libs gtk+-3.0` -rdynamic -Wno-unused-result -ggdb -DGDK_DEBUG=nograbs -pthread -lcjson
 
 SRCS = $(wildcard src/*.c) $(wildcard src/ui/*.c) $(wildcard src/display/*.c) $(wildcard src/config/*.c)
 

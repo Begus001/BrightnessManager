@@ -1,3 +1,5 @@
 .vscode
 brightness-manager
 src/ui/winMain.glade~
+src/ui/#winMain.glade#
+config.json

@@ -15,15 +15,25 @@ static GtkSpinButton *spbt_sunrise_min;
 static GtkSpinButton *spbt_night_brightness;
 static GtkSpinButton *spbt_day_brightness;
 
+static GtkSpinButton *spbt_max_monitors;
+static GtkSpinButton *spbt_update_interval;
+static GtkSpinButton *spbt_i2c1;
+static GtkSpinButton *spbt_i2c2;
+static GtkSpinButton *spbt_i2c3;
+static GtkSpinButton *spbt_i2c4;
+static GtkSpinButton *spbt_i2c5;
+static GtkSpinButton *spbt_i2c6;
+
 static display_config_t *display_configs;
 static program_config_t *program_config;
 
 static unsigned int current_monitor_index = 0;
-static bool current_monitor_changed = false;
+static bool config_changed = false;
 
-static void refresh_ui_display_settings()
+static void refresh_config()
 {
-	current_monitor_changed = true;
+	config_changed = true;
+
 	gtk_spin_button_set_value(spbt_sunset_hour, display_configs[current_monitor_index].sunset_hour);
 	gtk_spin_button_set_value(spbt_sunset_min, display_configs[current_monitor_index].sunset_min);
 	gtk_spin_button_set_value(
@@ -33,7 +43,17 @@ static void refresh_ui_display_settings()
 		spbt_night_brightness, display_configs[current_monitor_index].night_brightness);
 	gtk_spin_button_set_value(
 		spbt_day_brightness, display_configs[current_monitor_index].day_brightness);
-	current_monitor_changed = false;
+
+	gtk_spin_button_set_value(spbt_max_monitors, program_config->max_displays);
+	gtk_spin_button_set_value(spbt_update_interval, program_config->update_interval);
+	gtk_spin_button_set_value(spbt_i2c1, program_config->i2c1);
+	gtk_spin_button_set_value(spbt_i2c2, program_config->i2c2);
+	gtk_spin_button_set_value(spbt_i2c3, program_config->i2c3);
+	gtk_spin_button_set_value(spbt_i2c4, program_config->i2c4);
+	gtk_spin_button_set_value(spbt_i2c5, program_config->i2c5);
+	gtk_spin_button_set_value(spbt_i2c6, program_config->i2c6);
+
+	config_changed = false;
 }
 
 void winMain_destroy_cb(GtkWidget *widget, gpointer data) { gtk_main_quit(); }
@@ -51,7 +71,7 @@ void btCancel_clicked_cb(GtkWidget *widget, gpointer data)
 
 	cfg_notify_display_configs_cancelled();
 
-	refresh_ui_display_settings();
+	refresh_config();
 }
 
 void btApplyToAll_clicked_cb(GtkWidget *widget, gpointer data)
@@ -61,7 +81,7 @@ void btApplyToAll_clicked_cb(GtkWidget *widget, gpointer data)
 
 void spbtSunsetHour_value_changed_cb(GtkWidget *widget, gpointer data)
 {
-	if (current_monitor_changed)
+	if (config_changed)
 		return;
 
 	cfg_notify_display_configs_changed();
@@ -75,7 +95,7 @@ void spbtSunsetHour_value_changed_cb(GtkWidget *widget, gpointer data)
 
 void spbtSunsetMinute_value_changed_cb(GtkWidget *widget, gpointer data)
 {
-	if (current_monitor_changed)
+	if (config_changed)
 		return;
 
 	cfg_notify_display_configs_changed();
@@ -89,7 +109,7 @@ void spbtSunsetMinute_value_changed_cb(GtkWidget *widget, gpointer data)
 
 void spbtSunriseHour_value_changed_cb(GtkWidget *widget, gpointer data)
 {
-	if (current_monitor_changed)
+	if (config_changed)
 		return;
 
 	cfg_notify_display_configs_changed();
@@ -103,7 +123,7 @@ void spbtSunriseHour_value_changed_cb(GtkWidget *widget, gpointer data)
 
 void spbtSunriseMinute_value_changed_cb(GtkWidget *widget, gpointer data)
 {
-	if (current_monitor_changed)
+	if (config_changed)
 		return;
 
 	cfg_notify_display_configs_changed();
@@ -117,7 +137,7 @@ void spbtSunriseMinute_value_changed_cb(GtkWidget *widget, gpointer data)
 
 void spbtNightBrightness_value_changed_cb(GtkWidget *widget, gpointer data)
 {
-	if (current_monitor_changed)
+	if (config_changed)
 		return;
 
 	cfg_notify_display_configs_changed();
@@ -131,7 +151,7 @@ void spbtNightBrightness_value_changed_cb(GtkWidget *widget, gpointer data)
 
 void spbtDayBrightness_value_changed_cb(GtkWidget *widget, gpointer data)
 {
-	if (current_monitor_changed)
+	if (config_changed)
 		return;
 
 	cfg_notify_display_configs_changed();
@@ -145,50 +165,111 @@ void spbtDayBrightness_value_changed_cb(GtkWidget *widget, gpointer data)
 
 void spbtMonitor_value_changed_cb(GtkWidget *widget, gpointer data)
 {
+	if (config_changed)
+		return;
+
 	current_monitor_index = gtk_spin_button_get_value_as_int(GTK_SPIN_BUTTON(widget)) - 1;
 
-	refresh_ui_display_settings();
+	refresh_config();
 
 	printf("UI: spbtMonitor_value_changed %d\n", current_monitor_index);
 }
 
 void spbtMaxMonitors_value_changed_cb(GtkWidget *widget, gpointer data)
 {
+	if (config_changed)
+		return;
+
+	program_config->max_displays = gtk_spin_button_get_value_as_int(GTK_SPIN_BUTTON(widget));
+
+	cfg_notify_program_config_changed();
+
 	printf("UI: spbtMaxMonitors_value_changed\n");
 }
 
 void spbtUpdateInterval_value_changed_cb(GtkWidget *widget, gpointer data)
 {
+	if (config_changed)
+		return;
+
+	program_config->update_interval = gtk_spin_button_get_value_as_int(GTK_SPIN_BUTTON(widget));
+
+	bm_set_update_interval(program_config->update_interval);
+
+	cfg_notify_program_config_changed();
+
 	printf("UI: spbtUpdateInterval_value_changed\n");
 }
 
 void spbtI2C1_value_changed_cb(GtkWidget *widget, gpointer data)
 {
+	if (config_changed)
+		return;
+
+	program_config->i2c1 = gtk_spin_button_get_value_as_int(GTK_SPIN_BUTTON(widget));
+
+	cfg_notify_program_config_changed();
+
 	printf("UI: spbtI2C1_value_changed\n");
 }
 
 void spbtI2C2_value_changed_cb(GtkWidget *widget, gpointer data)
 {
+	if (config_changed)
+		return;
+
+	program_config->i2c2 = gtk_spin_button_get_value_as_int(GTK_SPIN_BUTTON(widget));
+
+	cfg_notify_program_config_changed();
+
 	printf("UI: spbtI2C2_value_changed\n");
 }
 
 void spbtI2C3_value_changed_cb(GtkWidget *widget, gpointer data)
 {
+	if (config_changed)
+		return;
+
+	program_config->i2c3 = gtk_spin_button_get_value_as_int(GTK_SPIN_BUTTON(widget));
+
+	cfg_notify_program_config_changed();
+
 	printf("UI: spbtI2C3_value_changed\n");
 }
 
 void spbtI2C4_value_changed_cb(GtkWidget *widget, gpointer data)
 {
+	if (config_changed)
+		return;
+
+	program_config->i2c4 = gtk_spin_button_get_value_as_int(GTK_SPIN_BUTTON(widget));
+
+	cfg_notify_program_config_changed();
+
 	printf("UI: spbtI2C4_value_changed\n");
 }
 
 void spbtI2C5_value_changed_cb(GtkWidget *widget, gpointer data)
 {
+	if (config_changed)
+		return;
+
+	program_config->i2c5 = gtk_spin_button_get_value_as_int(GTK_SPIN_BUTTON(widget));
+
+	cfg_notify_program_config_changed();
+
 	printf("UI: spbtI2C5_value_changed\n");
 }
 
 void spbtI2C6_value_changed_cb(GtkWidget *widget, gpointer data)
 {
+	if (config_changed)
+		return;
+
+	program_config->i2c6 = gtk_spin_button_get_value_as_int(GTK_SPIN_BUTTON(widget));
+
+	cfg_notify_program_config_changed();
+
 	printf("UI: spbtI2C6_value_changed\n");
 }
 
@@ -224,10 +305,21 @@ void ui_init()
 	spbt_night_brightness = GTK_SPIN_BUTTON(gtk_builder_get_object(builder, "spbtNightBrightness"));
 	spbt_day_brightness = GTK_SPIN_BUTTON(gtk_builder_get_object(builder, "spbtDayBrightness"));
 
+	spbt_max_monitors = GTK_SPIN_BUTTON(gtk_builder_get_object(builder, "spbtMaxMonitors"));
+	spbt_update_interval = GTK_SPIN_BUTTON(gtk_builder_get_object(builder, "spbtUpdateInterval"));
+	spbt_i2c1 = GTK_SPIN_BUTTON(gtk_builder_get_object(builder, "spbtI2C1"));
+	spbt_i2c2 = GTK_SPIN_BUTTON(gtk_builder_get_object(builder, "spbtI2C2"));
+	spbt_i2c3 = GTK_SPIN_BUTTON(gtk_builder_get_object(builder, "spbtI2C3"));
+	spbt_i2c4 = GTK_SPIN_BUTTON(gtk_builder_get_object(builder, "spbtI2C4"));
+	spbt_i2c5 = GTK_SPIN_BUTTON(gtk_builder_get_object(builder, "spbtI2C5"));
+	spbt_i2c6 = GTK_SPIN_BUTTON(gtk_builder_get_object(builder, "spbtI2C6"));
+
 	display_configs = cfg_get_display_configs();
 	program_config = cfg_get_program_config();
 
 	gtk_builder_connect_signals(builder, NULL);
+
+	refresh_config();
 
 	gtk_window_present(win_main);
 	gtk_main();
