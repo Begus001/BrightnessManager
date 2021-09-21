@@ -19,6 +19,8 @@ static GtkSpinButton *spbt_day_brightness;
 static GtkSpinButton *spbt_monitor;
 
 static GtkSpinButton *spbt_manual_monitor;
+static GtkSpinButton *spbt_manual_brightness;
+static GtkButton *bt_apply_manual;
 
 static GtkSpinButton *spbt_max_monitors;
 static GtkSpinButton *spbt_update_interval;
@@ -295,7 +297,7 @@ void btAutoDetect_clicked_cb(GtkWidget *widget, gpointer data)
 	refresh_config();
 }
 
-gboolean swEnabled_state_set_cb(GtkWidget *widget, gboolean state, gpointer user_data)
+bool swEnabled_state_set_cb(GtkWidget *widget, gboolean state, gpointer user_data)
 {
 	printf("UI: swEnabled_state_set %d\n", state);
 
@@ -303,19 +305,28 @@ gboolean swEnabled_state_set_cb(GtkWidget *widget, gboolean state, gpointer user
 
 	bm_set_enabled(state);
 
-	return FALSE;
+	return true;
 }
 
 void btApplyManual_clicked_cb(GtkWidget *widget, gpointer data)
 {
 	printf("UI: btApplyManual_clicked\n");
 
-	swEnabled_state_set_cb(GTK_WIDGET(sw_enabled), FALSE, NULL);
+	swEnabled_state_set_cb(GTK_WIDGET(sw_enabled), false, NULL);
+
+	unsigned int display, brightness;
+
+	display = gtk_spin_button_get_value_as_int(spbt_manual_monitor);
+	brightness = gtk_spin_button_get_value_as_int(spbt_manual_brightness);
+
+	bm_set_manual_brightness(display, brightness);
 }
 
 void spbtManualBrightness_activate_cb(GtkWidget *widget, gpointer data)
 {
+	gtk_widget_grab_focus(GTK_WIDGET(bt_apply_manual));
 	btApplyManual_clicked_cb(widget, data);
+	gtk_widget_grab_focus(widget);
 }
 
 void ui_init()
@@ -334,6 +345,9 @@ void ui_init()
 	spbt_monitor = GTK_SPIN_BUTTON(gtk_builder_get_object(builder, "spbtMonitor"));
 
 	spbt_manual_monitor = GTK_SPIN_BUTTON(gtk_builder_get_object(builder, "spbtManualMonitor"));
+	spbt_manual_brightness
+		= GTK_SPIN_BUTTON(gtk_builder_get_object(builder, "spbtManualBrightness"));
+	bt_apply_manual = GTK_BUTTON(gtk_builder_get_object(builder, "btApplyManual"));
 
 	spbt_max_monitors = GTK_SPIN_BUTTON(gtk_builder_get_object(builder, "spbtMaxMonitors"));
 	spbt_update_interval = GTK_SPIN_BUTTON(gtk_builder_get_object(builder, "spbtUpdateInterval"));

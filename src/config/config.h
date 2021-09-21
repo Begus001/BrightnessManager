@@ -16,6 +16,8 @@
 #define DEFAULT_UPDATE_INTERVAL "1"
 #define DEFAULT_I2C "0"
 
+#define I2C_OFFSET 2
+
 typedef struct {
 	unsigned int sunset_hour;
 	unsigned int sunset_min;

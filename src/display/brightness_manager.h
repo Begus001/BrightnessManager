@@ -6,9 +6,11 @@
 
 #include "../config/config.h"
 
-void bm_init();
-
 void bm_set_update_interval(unsigned int val);
 void bm_set_enabled(bool val);
+
+void bm_set_manual_brightness(unsigned int display, unsigned int brightness);
+
+void bm_init();
 
 #endif

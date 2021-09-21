@@ -319,7 +319,7 @@ void cfg_auto_detect_i2c()
 
 	char *p = strtok(cmd_output, "-\n");
 
-	int i = 1, k = 2;
+	int i = 1, k = I2C_OFFSET;
 	do {
 		if (!(i % 3)) {
 			printf("  %d: %s\n", k - 1, p);
