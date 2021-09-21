@@ -14,6 +14,9 @@ static GtkSpinButton *spbt_sunrise_hour;
 static GtkSpinButton *spbt_sunrise_min;
 static GtkSpinButton *spbt_night_brightness;
 static GtkSpinButton *spbt_day_brightness;
+static GtkSpinButton *spbt_monitor;
+
+static GtkSpinButton *spbt_manual_monitor;
 
 static GtkSpinButton *spbt_max_monitors;
 static GtkSpinButton *spbt_update_interval;
@@ -52,6 +55,11 @@ static void refresh_config()
 	gtk_spin_button_set_value(spbt_i2c4, program_config->i2c4);
 	gtk_spin_button_set_value(spbt_i2c5, program_config->i2c5);
 	gtk_spin_button_set_value(spbt_i2c6, program_config->i2c6);
+
+	GtkAdjustment *adj = gtk_spin_button_get_adjustment(spbt_monitor);
+	gtk_adjustment_set_upper(adj, program_config->max_displays);
+	adj = gtk_spin_button_get_adjustment(spbt_manual_monitor);
+	gtk_adjustment_set_upper(adj, program_config->max_displays);
 
 	config_changed = false;
 }
@@ -186,6 +194,9 @@ void spbtMaxMonitors_value_changed_cb(GtkWidget *widget, gpointer data)
 
 	cfg_notify_program_config_changed();
 
+	gtk_spin_button_set_value(spbt_monitor, 1);
+	gtk_spin_button_set_value(spbt_manual_monitor, 1);
+
 	printf("UI: spbtMaxMonitors_value_changed\n");
 }
 
@@ -315,6 +326,9 @@ void ui_init()
 	spbt_sunrise_min = GTK_SPIN_BUTTON(gtk_builder_get_object(builder, "spbtSunriseMinute"));
 	spbt_night_brightness = GTK_SPIN_BUTTON(gtk_builder_get_object(builder, "spbtNightBrightness"));
 	spbt_day_brightness = GTK_SPIN_BUTTON(gtk_builder_get_object(builder, "spbtDayBrightness"));
+	spbt_monitor = GTK_SPIN_BUTTON(gtk_builder_get_object(builder, "spbtMonitor"));
+
+	spbt_manual_monitor = GTK_SPIN_BUTTON(gtk_builder_get_object(builder, "spbtManualMonitor"));
 
 	spbt_max_monitors = GTK_SPIN_BUTTON(gtk_builder_get_object(builder, "spbtMaxMonitors"));
 	spbt_update_interval = GTK_SPIN_BUTTON(gtk_builder_get_object(builder, "spbtUpdateInterval"));
