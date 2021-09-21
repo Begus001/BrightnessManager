@@ -8,6 +8,8 @@
 static GtkWindow *win_main;
 static GtkBuilder *builder;
 
+static GtkSwitch *sw_enabled;
+
 static GtkSpinButton *spbt_sunset_hour;
 static GtkSpinButton *spbt_sunset_min;
 static GtkSpinButton *spbt_sunrise_hour;
@@ -85,7 +87,7 @@ void btCancel_clicked_cb(GtkWidget *widget, gpointer data)
 void btApplyToAll_clicked_cb(GtkWidget *widget, gpointer data)
 {
 	cfg_apply_to_all(current_monitor_index);
-	
+
 	printf("UI: btApplyToAll_clicked\n");
 }
 
@@ -293,19 +295,22 @@ void btAutoDetect_clicked_cb(GtkWidget *widget, gpointer data)
 	refresh_config();
 }
 
-void swEnabled_state_set_cb(GtkWidget *widget, gpointer data)
+gboolean swEnabled_state_set_cb(GtkWidget *widget, gboolean state, gpointer user_data)
 {
-	gboolean state;
-	gtk_switch_set_state(GTK_SWITCH(widget), state = !gtk_switch_get_state(GTK_SWITCH(widget)));
+	printf("UI: swEnabled_state_set %d\n", state);
+
+	gtk_switch_set_state(GTK_SWITCH(widget), state);
 
 	bm_set_enabled(state);
 
-	printf("UI: swEnabled_state_set %d\n", state);
+	return FALSE;
 }
 
 void btApplyManual_clicked_cb(GtkWidget *widget, gpointer data)
 {
 	printf("UI: btApplyManual_clicked\n");
+
+	swEnabled_state_set_cb(GTK_WIDGET(sw_enabled), FALSE, NULL);
 }
 
 void spbtManualBrightness_activate_cb(GtkWidget *widget, gpointer data)
@@ -317,6 +322,8 @@ void ui_init()
 {
 	builder = gtk_builder_new_from_file("src/ui/winMain.glade");
 	win_main = GTK_WINDOW(gtk_builder_get_object(builder, "winMain"));
+
+	sw_enabled = GTK_SWITCH(gtk_builder_get_object(builder, "swEnabled"));
 
 	spbt_sunset_hour = GTK_SPIN_BUTTON(gtk_builder_get_object(builder, "spbtSunsetHour"));
 	spbt_sunset_min = GTK_SPIN_BUTTON(gtk_builder_get_object(builder, "spbtSunsetMinute"));
