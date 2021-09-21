@@ -3,7 +3,6 @@
 #include <stdbool.h>
 #include <stdio.h>
 #include <time.h>
-#include <unistd.h>
 
 #include "../config/config.h"
 #include "../ui/ui.h"
@@ -18,10 +17,90 @@ bool enabled = false;
 
 void bm_set_enabled(bool val) { enabled = val; }
 
+static void set_brightness_cmd(unsigned int i2c, unsigned int brightness)
+{
+	char cmd[64];
+
+	sprintf(cmd, "sudo ddccontrol -r 0x10 -w %d dev:/dev/i2c-%d 2>/dev/null", brightness, i2c);
+
+	FILE *pipe = popen(cmd, "r");
+
+	assert(pipe);
+
+	pclose(pipe);
+}
+
+void bm_set_brightness(unsigned int display, unsigned int brightness)
+{
+	if (brightness > 100)
+		brightness = 100;
+	else if (brightness < 0)
+		brightness = 0;
+
+	printf("BM: Setting brightness %d for display %d\n", brightness, display + 1);
+
+	unsigned int *p = (unsigned int *)program_config + I2C_OFFSET;
+	set_brightness_cmd(p[display], brightness);
+}
+
+static unsigned int calculate_brightness_taper_sunset(
+	double t, double taper, unsigned int display, bool invert)
+{
+	if (!invert)
+		return (t / taper)
+			* (display_configs[display].day_brightness - display_configs[display].night_brightness)
+			+ display_configs[display].night_brightness;
+	else
+		return ((taper - t) / taper)
+			* (display_configs[display].day_brightness - display_configs[display].night_brightness)
+			+ display_configs[display].night_brightness;
+}
+
 static void update()
 {
-	printf("test\n");
-	fflush(stdout);
+	printf("BM: Updating brightness\n");
+
+	time_t now = time(NULL);
+
+	double times[MAX_DISPLAYS][2];
+
+	for (int i = 0; i < program_config->max_displays; i++) {
+		struct tm buf = *(localtime(&now));
+
+		buf.tm_hour = display_configs[i].sunset_hour;
+		buf.tm_min = display_configs[i].sunset_min;
+		buf.tm_sec = 0;
+
+		times[i][0] = difftime(mktime(&buf), now);
+		if (times[i][0] < 0) {
+			times[i][0] += 60 * 60 * 24;
+		}
+
+		buf.tm_hour = display_configs[i].sunrise_hour;
+		buf.tm_min = display_configs[i].sunrise_min;
+		buf.tm_sec = 0;
+
+		times[i][1] = difftime(mktime(&buf), now);
+		if (times[i][1] < 0) {
+			times[i][1] += 60 * 60 * 24;
+		}
+
+		if (times[i][0] <= TAPER_LENGTH) {
+			printf("BM: Tapering to night brightness\n");
+			bm_set_brightness(
+				i, calculate_brightness_taper_sunset(times[i][0], TAPER_LENGTH, i, false));
+		} else if (times[i][1] <= TAPER_LENGTH) {
+			printf("BM: Tapering to day brightness\n");
+			bm_set_brightness(
+				i, calculate_brightness_taper_sunset(times[i][1], TAPER_LENGTH, i, true));
+		} else if (times[i][0] < times[i][1]) {
+			printf("BM: Daytime\n");
+			bm_set_brightness(i, display_configs[i].day_brightness);
+		} else {
+			printf("BM: Nighttime\n");
+			bm_set_brightness(i, display_configs[i].night_brightness);
+		}
+	}
 }
 
 static void *brightness_worker()
@@ -38,25 +117,6 @@ static void *brightness_worker()
 	}
 
 	return NULL;
-}
-
-static void set_brightness(unsigned int i2c, unsigned int brightness)
-{
-	char cmd[64];
-
-	sprintf(cmd, "sudo ddccontrol -r 0x10 -w %d dev:/dev/i2c-%d 2>/dev/null", brightness, i2c);
-
-	FILE *pipe = popen(cmd, "r");
-
-	assert(pipe);
-
-	pclose(pipe);
-}
-
-void bm_set_manual_brightness(unsigned int display, unsigned int brightness)
-{
-	unsigned int *p = (unsigned int *)program_config + I2C_OFFSET;
-	set_brightness(p[display - 1], brightness);
 }
 
 void bm_init()

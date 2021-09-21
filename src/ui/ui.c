@@ -319,7 +319,14 @@ void btApplyManual_clicked_cb(GtkWidget *widget, gpointer data)
 	display = gtk_spin_button_get_value_as_int(spbt_manual_monitor);
 	brightness = gtk_spin_button_get_value_as_int(spbt_manual_brightness);
 
-	bm_set_manual_brightness(display, brightness);
+	bm_set_brightness(display - 1, brightness);
+}
+
+void spbtManualMonitor_activate_cb(GtkWidget *widget, gpointer data)
+{
+	gtk_widget_grab_focus(GTK_WIDGET(bt_apply_manual));
+	btApplyManual_clicked_cb(widget, data);
+	gtk_widget_grab_focus(widget);
 }
 
 void spbtManualBrightness_activate_cb(GtkWidget *widget, gpointer data)

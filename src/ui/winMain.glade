@@ -102,6 +102,7 @@
             <property name="adjustment">adjManualMonitor</property>
             <property name="snap-to-ticks">True</property>
             <property name="numeric">True</property>
+            <signal name="activate" handler="spbtManualMonitor_activate_cb" swapped="no"/>
           </object>
           <packing>
             <property name="expand">False</property>
@@ -1024,6 +1025,7 @@
             <property name="can-focus">True</property>
             <property name="focus-on-click">False</property>
             <property name="receives-default">True</property>
+            <property name="tooltip-text" translatable="yes">Settings</property>
             <property name="popover">popSettings</property>
             <child>
               <object class="GtkImage" id="imgSettings">
