@@ -207,8 +207,6 @@ void spbtUpdateInterval_value_changed_cb(GtkWidget *widget, gpointer data)
 
 	program_config->update_interval = gtk_spin_button_get_value_as_int(GTK_SPIN_BUTTON(widget));
 
-	bm_set_update_interval(program_config->update_interval);
-
 	cfg_notify_program_config_changed();
 
 	printf("UI: spbtUpdateInterval_value_changed\n");

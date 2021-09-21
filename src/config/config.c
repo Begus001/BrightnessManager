@@ -291,6 +291,8 @@ static void create_default_config_file()
 
 	write_to_file(main);
 
+	load_config();
+
 	cJSON_free(main);
 	cJSON_free(display_config_array);
 

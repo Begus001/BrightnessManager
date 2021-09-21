@@ -10,10 +10,10 @@
 
 static pthread_t worker;
 
-unsigned int update_interval = 1;
-bool enabled = false;
+static display_config_t *display_configs;
+static program_config_t *program_config;
 
-void bm_set_update_interval(unsigned int val) { update_interval = val; }
+bool enabled = false;
 
 void bm_set_enabled(bool val) { enabled = val; }
 
@@ -29,7 +29,7 @@ static void *brightness_worker()
 	while (true) {
 		usleep(1000);
 		if (enabled) {
-			if (difftime(time(NULL), start) >= update_interval) {
+			if (difftime(time(NULL), start) >= program_config->update_interval) {
 				start = time(NULL);
 				update();
 			}
@@ -42,6 +42,9 @@ static void *brightness_worker()
 void bm_init()
 {
 	enabled = false;
+
+	display_configs = cfg_get_display_configs();
+	program_config = cfg_get_program_config();
 
 	pthread_create(&worker, NULL, brightness_worker, NULL);
 }
