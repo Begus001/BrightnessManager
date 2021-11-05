@@ -4,6 +4,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <sys/stat.h>
 
 #include "config.h"
 
@@ -12,15 +13,19 @@ static program_config_t program_config;
 
 static bool display_configs_changed = false;
 
+char *cfg_user_home;
+char *cfg_file_path;
+char *cfg_file_dir;
+
 display_config_t *cfg_get_display_configs() { return display_configs; }
 
 program_config_t *cfg_get_program_config() { return &program_config; }
 
 static char *load_from_file()
 {
-	FILE *file = fopen(CONFIG_FILE_PATH, "r");
+	FILE *file = fopen(cfg_file_path, "r");
 
-	assert(file);
+	assert(file && "Couldn't load file from config path");
 
 	char *buf;
 	unsigned int size;
@@ -40,9 +45,9 @@ static char *load_from_file()
 
 static void write_to_file(cJSON *json)
 {
-	FILE *file = fopen(CONFIG_FILE_PATH, "w+");
+	FILE *file = fopen(cfg_file_path, "w+");
 
-	assert(file);
+	assert(file && "Couldn't load file from config path");
 
 	printf("CFG: Writing configuration to file\n");
 
@@ -58,7 +63,7 @@ void cfg_notify_program_config_changed()
 	cJSON *main = cJSON_Parse(buf);
 	cJSON *program_config_json = cJSON_GetObjectItemCaseSensitive(main, "program-config");
 
-	assert(main && program_config_json);
+	assert(main && program_config_json && "JSON parse error");
 
 	cJSON *max_displays = cJSON_GetObjectItemCaseSensitive(program_config_json, "max-displays");
 	cJSON *update_interval
@@ -70,7 +75,8 @@ void cfg_notify_program_config_changed()
 	cJSON *i2c5 = cJSON_GetObjectItemCaseSensitive(program_config_json, "i2c5");
 	cJSON *i2c6 = cJSON_GetObjectItemCaseSensitive(program_config_json, "i2c6");
 
-	assert(max_displays && update_interval && i2c1 && i2c2 && i2c3 && i2c4 && i2c5 && i2c6);
+	assert(max_displays && update_interval && i2c1 && i2c2 && i2c3 && i2c4 && i2c5 && i2c6
+		&& "JSON parse error");
 
 	sprintf(val_buf, "%d", program_config.max_displays);
 	cJSON_SetValuestring(max_displays, val_buf);
@@ -128,7 +134,7 @@ static void update_display_config_values()
 	cJSON *display_config_array = cJSON_GetObjectItemCaseSensitive(main, "display-configs");
 	cJSON *display_config_item = NULL;
 
-	assert(main && display_config_array);
+	assert(main && display_config_array && "JSON parse error");
 
 	int i = 0;
 
@@ -144,7 +150,7 @@ static void update_display_config_values()
 			= cJSON_GetObjectItemCaseSensitive(display_config_item, "day-brightness");
 
 		assert(sunset_hour && sunset_min && sunrise_hour && sunrise_min && night_brightness
-			&& day_brightness);
+			&& day_brightness && "JSON parse error");
 
 		sprintf(val_buf, "%d", display_configs[i].sunset_hour);
 		cJSON_SetValuestring(sunset_hour, val_buf);
@@ -199,7 +205,7 @@ static void load_config()
 	cJSON *display_config_item = NULL;
 	cJSON *program_config_json = cJSON_GetObjectItemCaseSensitive(main, "program-config");
 
-	assert(main && display_config_array && program_config_json);
+	assert(main && display_config_array && program_config_json && "JSON parse error");
 
 	int i = 0;
 
@@ -215,7 +221,7 @@ static void load_config()
 			= cJSON_GetObjectItemCaseSensitive(display_config_item, "day-brightness");
 
 		assert(sunset_hour && sunset_min && sunrise_hour && sunrise_min && night_brightness
-			&& day_brightness);
+			&& day_brightness && "JSON parse error");
 
 		display_configs[i].sunset_hour = atoi(cJSON_GetStringValue(sunset_hour));
 		display_configs[i].sunset_min = atoi(cJSON_GetStringValue(sunset_min));
@@ -237,7 +243,8 @@ static void load_config()
 	cJSON *i2c5 = cJSON_GetObjectItemCaseSensitive(program_config_json, "i2c5");
 	cJSON *i2c6 = cJSON_GetObjectItemCaseSensitive(program_config_json, "i2c6");
 
-	assert(max_displays && update_interval && i2c1 && i2c2 && i2c3 && i2c4 && i2c5 && i2c6);
+	assert(max_displays && update_interval && i2c1 && i2c2 && i2c3 && i2c4 && i2c5 && i2c6
+		&& "JSON parse error");
 
 	program_config.max_displays = atoi(cJSON_GetStringValue(max_displays));
 	program_config.update_interval = atoi(cJSON_GetStringValue(update_interval));
@@ -260,7 +267,7 @@ static void create_default_config_file()
 	cJSON *display_config_items[MAX_DISPLAYS];
 	cJSON *program_config_json = cJSON_CreateObject();
 
-	assert(main && display_config_array && program_config_json);
+	assert(main && display_config_array && program_config_json && "Error creating JSON config");
 
 	printf("CFG: Creating default configuration\n");
 
@@ -289,7 +296,14 @@ static void create_default_config_file()
 	cJSON_AddStringToObject(program_config_json, "i2c5", DEFAULT_I2C);
 	cJSON_AddStringToObject(program_config_json, "i2c6", DEFAULT_I2C);
 
+	int ret = mkdir(cfg_file_dir, 0775);
+	assert(!ret && "Couldn't create config directory");
+
+	printf("CFG: Created directory %s\n", cfg_file_dir);
+
 	write_to_file(main);
+
+	printf("CFG: Created file %s\n", cfg_file_path);
 
 	load_config();
 
@@ -311,7 +325,7 @@ void cfg_auto_detect_i2c()
 
 	pipe = popen("sudo ddccontrol -p 2>/dev/null | grep \"Device: dev:/dev/i2c-\"", "r");
 
-	assert(pipe);
+	assert(pipe && "Couldn't open pipe to process (auto-detection failed)");
 
 	while (fgets(buf, sizeof(buf), pipe)) {
 		strcat(cmd_output, buf);
@@ -319,26 +333,46 @@ void cfg_auto_detect_i2c()
 
 	char *p = strtok(cmd_output, "-\n");
 
-	int i = 1, k = I2C_OFFSET;
+	int i = 1, k = I2C_OFFSET, n = 0;
 	do {
 		if (!(i % 3)) {
 			printf("  %d: %s\n", k - 1, p);
 			unsigned int *cfg_ptr = (unsigned int *)&program_config;
 			cfg_ptr[k++] = atoi(p);
+			n++;
 		}
 
 		p = strtok(NULL, "-\n");
 		i++;
 	} while (p);
 
+	program_config.max_displays = n;
+
 	cfg_notify_program_config_changed();
 
 	pclose(pipe);
 }
 
+static void get_config_path()
+{
+	cfg_user_home = malloc(sizeof(getenv("HOME")));
+	strcpy(cfg_user_home, getenv("HOME"));
+
+	cfg_file_dir = malloc(strlen(cfg_user_home) + sizeof(CFG_REL_PATH));
+	cfg_file_path = malloc(strlen(cfg_user_home) + strlen(CFG_REL_PATH) + sizeof(CFG_FILENAME));
+
+	strcpy(cfg_file_dir, cfg_user_home);
+	strcat(cfg_file_dir, CFG_REL_PATH);
+
+	strcpy(cfg_file_path, cfg_file_dir);
+	strcat(cfg_file_path, CFG_FILENAME);
+}
+
 void cfg_init()
 {
-	FILE *file = fopen(CONFIG_FILE_PATH, "r+");
+	get_config_path();
+
+	FILE *file = fopen(cfg_file_path, "r+");
 
 	if (file == NULL) {
 		create_default_config_file();

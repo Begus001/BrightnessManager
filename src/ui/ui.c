@@ -37,6 +37,27 @@ static program_config_t *program_config;
 static unsigned int current_monitor_index = 0;
 static bool config_changed = false;
 
+static void refresh_max_monitors()
+{
+	GtkSpinButton *spbts[6];
+	spbts[0] = spbt_i2c1;	
+	spbts[1] = spbt_i2c2;
+	spbts[2] = spbt_i2c3;
+	spbts[3] = spbt_i2c4;
+	spbts[4] = spbt_i2c5;
+	spbts[5] = spbt_i2c6;
+
+	for (int i = 0; i < MAX_DISPLAYS; i++) {
+		if (i < program_config->max_displays)
+			gtk_widget_set_sensitive(GTK_WIDGET(spbts[i]), true);
+		else
+			gtk_widget_set_sensitive(GTK_WIDGET(spbts[i]), false);
+	}
+
+	GtkAdjustment *adj = gtk_spin_button_get_adjustment(spbt_manual_monitor);
+	gtk_adjustment_set_upper(adj, program_config->max_displays);
+}
+
 static void refresh_config()
 {
 	config_changed = true;
@@ -64,6 +85,8 @@ static void refresh_config()
 	gtk_adjustment_set_upper(adj, program_config->max_displays);
 	adj = gtk_spin_button_get_adjustment(spbt_manual_monitor);
 	gtk_adjustment_set_upper(adj, program_config->max_displays);
+
+	refresh_max_monitors();
 
 	config_changed = false;
 }
@@ -200,6 +223,8 @@ void spbtMaxMonitors_value_changed_cb(GtkWidget *widget, gpointer data)
 
 	gtk_spin_button_set_value(spbt_monitor, 1);
 	gtk_spin_button_set_value(spbt_manual_monitor, 1);
+
+	refresh_max_monitors();
 
 	printf("UI: spbtMaxMonitors_value_changed\n");
 }

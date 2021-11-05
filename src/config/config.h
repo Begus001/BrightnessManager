@@ -4,7 +4,9 @@
 #include <gtk/gtk.h>
 
 #define MAX_DISPLAYS 6
-#define CONFIG_FILE_PATH "config.json"
+
+#define CFG_REL_PATH "/.local/share/brightness-manager/"
+#define CFG_FILENAME "config.json"
 
 #define DEFAULT_SUNSET_HOUR "20"
 #define DEFAULT_SUNSET_MIN "0"
@@ -13,7 +15,7 @@
 #define DEFAULT_NIGHT_BRIGHTNESS "0"
 #define DEFAULT_DAY_BRIGHTNESS "100"
 #define DEFAULT_MAX_DISPLAYS "3"
-#define DEFAULT_UPDATE_INTERVAL "1"
+#define DEFAULT_UPDATE_INTERVAL "30"
 #define DEFAULT_I2C "0"
 
 #define I2C_OFFSET 2

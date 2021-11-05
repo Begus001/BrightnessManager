@@ -25,7 +25,7 @@ static void set_brightness_cmd(unsigned int i2c, unsigned int brightness)
 
 	FILE *pipe = popen(cmd, "r");
 
-	assert(pipe);
+	assert(pipe && "Couldn't open pipe to process (setting brightness failed)");
 
 	pclose(pipe);
 }
@@ -121,7 +121,7 @@ static void *brightness_worker()
 
 void bm_init()
 {
-	enabled = false;
+	enabled = true;
 
 	display_configs = cfg_get_display_configs();
 	program_config = cfg_get_program_config();
