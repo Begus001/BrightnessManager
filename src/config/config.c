@@ -1,5 +1,5 @@
+#include "cJSON.h"
 #include <assert.h>
-#include <cjson/cJSON.h>
 #include <stdbool.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -372,10 +372,7 @@ static void get_config_path()
 		cfg_file_path = CFG_FILENAME;
 }
 
-char *cfg_get_ui_path()
-{
-	return cfg_ui_path;
-}
+char *cfg_get_ui_path() { return cfg_ui_path; }
 
 void cfg_init()
 {
