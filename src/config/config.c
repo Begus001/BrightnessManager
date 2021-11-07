@@ -16,6 +16,7 @@ static bool display_configs_changed = false;
 char *cfg_user_home;
 char *cfg_file_path;
 char *cfg_file_dir;
+char *cfg_ui_path;
 
 display_config_t *cfg_get_display_configs() { return display_configs; }
 
@@ -40,6 +41,8 @@ static char *load_from_file()
 
 	fclose(file);
 
+	printf("CFG: Loaded configuration from file %s\n", cfg_file_path);
+
 	return buf;
 }
 
@@ -49,7 +52,7 @@ static void write_to_file(cJSON *json)
 
 	assert(file && "Couldn't load file from config path");
 
-	printf("CFG: Writing configuration to file\n");
+	printf("CFG: Writing configuration to file %s\n", cfg_file_path);
 
 	fputs(cJSON_Print(json), file);
 	fclose(file);
@@ -255,7 +258,7 @@ static void load_config()
 	program_config.i2c5 = atoi(cJSON_GetStringValue(i2c5));
 	program_config.i2c6 = atoi(cJSON_GetStringValue(i2c6));
 
-	printf("CFG: Configuration loaded from file\n");
+	printf("CFG: Parsed configuration\n");
 
 	free(buf);
 }
@@ -295,11 +298,6 @@ static void create_default_config_file()
 	cJSON_AddStringToObject(program_config_json, "i2c4", DEFAULT_I2C);
 	cJSON_AddStringToObject(program_config_json, "i2c5", DEFAULT_I2C);
 	cJSON_AddStringToObject(program_config_json, "i2c6", DEFAULT_I2C);
-
-	int ret = mkdir(cfg_file_dir, 0775);
-	assert(!ret && "Couldn't create config directory");
-
-	printf("CFG: Created directory %s\n", cfg_file_dir);
 
 	write_to_file(main);
 
@@ -359,13 +357,24 @@ static void get_config_path()
 	strcpy(cfg_user_home, getenv("HOME"));
 
 	cfg_file_dir = malloc(strlen(cfg_user_home) + sizeof(CFG_REL_PATH));
-	cfg_file_path = malloc(strlen(cfg_user_home) + strlen(CFG_REL_PATH) + sizeof(CFG_FILENAME));
-
 	strcpy(cfg_file_dir, cfg_user_home);
 	strcat(cfg_file_dir, CFG_REL_PATH);
 
+	cfg_file_path = malloc(strlen(cfg_file_dir) + sizeof(CFG_FILENAME));
 	strcpy(cfg_file_path, cfg_file_dir);
 	strcat(cfg_file_path, CFG_FILENAME);
+
+	cfg_ui_path = malloc(strlen(cfg_file_dir) + sizeof(CFG_UI_FILENAME));
+	strcpy(cfg_ui_path, cfg_file_dir);
+	strcat(cfg_ui_path, CFG_UI_FILENAME);
+
+	if (access(cfg_file_dir, F_OK))
+		cfg_file_path = CFG_FILENAME;
+}
+
+char *cfg_get_ui_path()
+{
+	return cfg_ui_path;
 }
 
 void cfg_init()

@@ -7,6 +7,7 @@
 
 #define CFG_REL_PATH "/.local/share/brightness-manager/"
 #define CFG_FILENAME "config.json"
+#define CFG_UI_FILENAME "winMain.glade"
 
 #define DEFAULT_SUNSET_HOUR "20"
 #define DEFAULT_SUNSET_MIN "0"
@@ -52,6 +53,8 @@ void cfg_notify_display_configs_applied();
 void cfg_notify_display_configs_cancelled();
 
 void cfg_auto_detect_i2c();
+
+char *cfg_get_ui_path();
 
 void cfg_init();
 

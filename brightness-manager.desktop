@@ -1,0 +1,8 @@
+[Desktop Entry]
+Name=Brightness Manager
+Comment=Controls the luminescence of your monitors
+Exec=brightness-manager
+Icon=
+Type=Application
+StartupNotify=true
+StartupWMClass=brightness-manager

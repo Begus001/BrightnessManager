@@ -40,7 +40,7 @@ static bool config_changed = false;
 static void refresh_max_monitors()
 {
 	GtkSpinButton *spbts[6];
-	spbts[0] = spbt_i2c1;	
+	spbts[0] = spbt_i2c1;
 	spbts[1] = spbt_i2c2;
 	spbts[2] = spbt_i2c3;
 	spbts[3] = spbt_i2c4;
@@ -363,7 +363,19 @@ void spbtManualBrightness_activate_cb(GtkWidget *widget, gpointer data)
 
 void ui_init()
 {
-	builder = gtk_builder_new_from_file("src/ui/winMain.glade");
+	char *ui_path;
+
+	if (!access(cfg_get_ui_path(), F_OK)) {
+		ui_path = cfg_get_ui_path();
+	} else if (!access(CFG_UI_FILENAME, F_OK)) {
+		ui_path = CFG_UI_FILENAME;
+	} else {
+		fprintf(stderr, "UI: ERROR: Couldn't find winMain.glade\n");
+		exit(1);
+	}
+
+	builder = gtk_builder_new_from_file(ui_path);
+
 	win_main = GTK_WINDOW(gtk_builder_get_object(builder, "winMain"));
 
 	sw_enabled = GTK_SWITCH(gtk_builder_get_object(builder, "swEnabled"));
