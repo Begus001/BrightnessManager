@@ -18,7 +18,7 @@ $(BIN_NAME): $(SRCS)
 	$(GCC) $^ -o $@ $(CFLAGS)
 
 run: $(BIN_NAME)
-	./$^
+	sudo -u $(USER) ./$^
 
 install: $(BIN_NAME) $(ICON_FILE) $(UI_FILE) $(DESKTOP_FILE)
 	mkdir -p $(SHARE_PATH)
@@ -29,6 +29,7 @@ install: $(BIN_NAME) $(ICON_FILE) $(UI_FILE) $(DESKTOP_FILE)
 	cp -f $(DESKTOP_FILE) $(DESKTOP_PATH)
 	cp -f $(BIN_NAME) $(BIN_PATH)
 	sed -i "s,Icon=.*,Icon=$(SHARE_PATH)/$(ICON_FILE),g" $(DESKTOP_PATH)/$(DESKTOP_FILE)
+	sed -i "s,Exec=.*,Exec=sudo -u $(USER) $(BIN_PATH)/$(BIN_NAME),g" $(DESKTOP_PATH)/$(DESKTOP_FILE)
 
 uninstall:
 	rm -rf $(SHARE_PATH) $(BIN_PATH)/$(BIN_NAME) $(DESKTOP_PATH)/$(DESKTOP_FILE) $(PIPE_FILE) $(CONFIG_FILE) $(BIN_NAME)
