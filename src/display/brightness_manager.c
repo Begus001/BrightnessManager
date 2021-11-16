@@ -85,14 +85,14 @@ static void update()
 			times[i][1] += 60 * 60 * 24;
 		}
 
-		if (times[i][0] <= TAPER_LENGTH) {
+		if (times[i][0] <= program_config->fade_duration * 60) {
 			printf("BM: Tapering to night brightness\n");
 			bm_set_brightness(
-				i, calculate_brightness_taper_sunset(times[i][0], TAPER_LENGTH, i, false));
-		} else if (times[i][1] <= TAPER_LENGTH) {
+				i, calculate_brightness_taper_sunset(times[i][0], program_config->fade_duration * 60, i, false));
+		} else if (times[i][1] <= program_config->fade_duration * 60) {
 			printf("BM: Tapering to day brightness\n");
 			bm_set_brightness(
-				i, calculate_brightness_taper_sunset(times[i][1], TAPER_LENGTH, i, true));
+				i, calculate_brightness_taper_sunset(times[i][1], program_config->fade_duration * 60, i, true));
 		} else if (times[i][0] < times[i][1]) {
 			printf("BM: Daytime\n");
 			bm_set_brightness(i, display_configs[i].day_brightness);

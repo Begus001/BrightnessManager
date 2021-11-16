@@ -6,8 +6,6 @@
 
 #include "../config/config.h"
 
-#define TAPER_LENGTH 3600.0
-
 void bm_set_update_interval(unsigned int val);
 void bm_set_enabled(bool val);
 

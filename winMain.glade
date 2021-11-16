@@ -11,6 +11,7 @@
   <object class="GtkAdjustment" id="adjFadeDuration">
     <property name="lower">10</property>
     <property name="upper">120</property>
+    <property name="value">60</property>
     <property name="step-increment">1</property>
     <property name="page-increment">10</property>
   </object>
@@ -85,7 +86,7 @@
             <property name="visible">True</property>
             <property name="can-focus">False</property>
             <property name="margin-bottom">5</property>
-            <property name="label" translatable="yes">Monitor</property>
+            <property name="label" translatable="yes">Display</property>
           </object>
           <packing>
             <property name="expand">False</property>
@@ -98,6 +99,7 @@
             <property name="width-request">50</property>
             <property name="visible">True</property>
             <property name="can-focus">True</property>
+            <property name="tooltip-text" translatable="yes">Display to change the brightness on</property>
             <property name="halign">center</property>
             <property name="margin-bottom">10</property>
             <property name="max-length">1</property>
@@ -134,6 +136,7 @@
             <property name="width-request">50</property>
             <property name="visible">True</property>
             <property name="can-focus">True</property>
+            <property name="tooltip-text" translatable="yes">Desired brightness for chosen display</property>
             <property name="halign">center</property>
             <property name="margin-bottom">10</property>
             <property name="max-length">3</property>
@@ -142,7 +145,7 @@
             <property name="input-purpose">number</property>
             <property name="orientation">vertical</property>
             <property name="adjustment">adjManualBrightness</property>
-            <property name="climb-rate">0.40</property>
+            <property name="climb-rate">0.5</property>
             <property name="snap-to-ticks">True</property>
             <property name="numeric">True</property>
             <property name="value">100</property>
@@ -218,7 +221,7 @@
   <object class="GtkAdjustment" id="adjUpdateInterval">
     <property name="lower">1</property>
     <property name="upper">60</property>
-    <property name="value">5</property>
+    <property name="value">15</property>
     <property name="step-increment">1</property>
     <property name="page-increment">10</property>
   </object>
@@ -264,6 +267,7 @@
                     <property name="width-request">50</property>
                     <property name="visible">True</property>
                     <property name="can-focus">True</property>
+                    <property name="tooltip-text" translatable="yes">How many displays there are to regulate the brightness on (usually autodetected)</property>
                     <property name="halign">center</property>
                     <property name="valign">center</property>
                     <property name="margin-start">10</property>
@@ -319,6 +323,7 @@
                     <property name="width-request">50</property>
                     <property name="visible">True</property>
                     <property name="can-focus">True</property>
+                    <property name="tooltip-text" translatable="yes">Interval at which brightness is regulated (in seconds)</property>
                     <property name="halign">center</property>
                     <property name="valign">center</property>
                     <property name="margin-start">10</property>
@@ -331,9 +336,10 @@
                     <property name="input-purpose">digits</property>
                     <property name="orientation">vertical</property>
                     <property name="adjustment">adjUpdateInterval</property>
+                    <property name="climb-rate">0.5</property>
                     <property name="snap-to-ticks">True</property>
                     <property name="numeric">True</property>
-                    <property name="value">10</property>
+                    <property name="value">15</property>
                     <signal name="value-changed" handler="spbtUpdateInterval_value_changed_cb" swapped="no"/>
                   </object>
                   <packing>
@@ -346,6 +352,7 @@
                     <property name="width-request">50</property>
                     <property name="visible">True</property>
                     <property name="can-focus">True</property>
+                    <property name="tooltip-text" translatable="yes">How long it takes to taper from day to night brightness (and vice versa, in minutes)</property>
                     <property name="halign">center</property>
                     <property name="valign">center</property>
                     <property name="margin-start">10</property>
@@ -358,9 +365,11 @@
                     <property name="input-purpose">number</property>
                     <property name="orientation">vertical</property>
                     <property name="adjustment">adjFadeDuration</property>
+                    <property name="climb-rate">0.5</property>
                     <property name="snap-to-ticks">True</property>
                     <property name="numeric">True</property>
                     <property name="value">60</property>
+                    <signal name="value-changed" handler="spbtFadeDuration_value_changed_cb" swapped="no"/>
                   </object>
                   <packing>
                     <property name="left-attach">1</property>
@@ -397,7 +406,7 @@
                     <property name="visible">True</property>
                     <property name="can-focus">False</property>
                     <property name="margin-bottom">10</property>
-                    <property name="label" translatable="yes">I2C device IDs (usually auto detected)</property>
+                    <property name="label" translatable="yes">I2C device IDs (usually autodetected)</property>
                   </object>
                   <packing>
                     <property name="expand">False</property>
@@ -489,6 +498,7 @@
                         <property name="width-request">50</property>
                         <property name="visible">True</property>
                         <property name="can-focus">True</property>
+                        <property name="tooltip-text" translatable="yes">I2C bus ID of monitor 1 (usually autodetected)</property>
                         <property name="halign">center</property>
                         <property name="valign">center</property>
                         <property name="margin-start">10</property>
@@ -508,6 +518,7 @@
                         <property name="width-request">50</property>
                         <property name="visible">True</property>
                         <property name="can-focus">True</property>
+                        <property name="tooltip-text" translatable="yes">I2C bus ID of monitor 2 (usually autodetected)</property>
                         <property name="halign">center</property>
                         <property name="valign">center</property>
                         <property name="margin-start">5</property>
@@ -527,6 +538,7 @@
                         <property name="width-request">50</property>
                         <property name="visible">True</property>
                         <property name="can-focus">True</property>
+                        <property name="tooltip-text" translatable="yes">I2C bus ID of monitor 3 (usually autodetected)</property>
                         <property name="halign">center</property>
                         <property name="valign">center</property>
                         <property name="margin-start">5</property>
@@ -546,6 +558,7 @@
                         <property name="width-request">50</property>
                         <property name="visible">True</property>
                         <property name="can-focus">True</property>
+                        <property name="tooltip-text" translatable="yes">I2C bus ID of monitor 4 (usually autodetected)</property>
                         <property name="halign">center</property>
                         <property name="valign">center</property>
                         <property name="margin-start">5</property>
@@ -565,6 +578,7 @@
                         <property name="width-request">50</property>
                         <property name="visible">True</property>
                         <property name="can-focus">True</property>
+                        <property name="tooltip-text" translatable="yes">I2C bus ID of monitor 5 (usually autodetected)</property>
                         <property name="halign">center</property>
                         <property name="valign">center</property>
                         <property name="margin-start">5</property>
@@ -584,6 +598,7 @@
                         <property name="width-request">50</property>
                         <property name="visible">True</property>
                         <property name="can-focus">True</property>
+                        <property name="tooltip-text" translatable="yes">I2C bus ID of monitor 6 (usually autodetected)</property>
                         <property name="halign">center</property>
                         <property name="valign">center</property>
                         <property name="margin-start">5</property>
@@ -607,11 +622,12 @@
                 </child>
                 <child>
                   <object class="GtkButton" id="btAutoDetect">
-                    <property name="label" translatable="yes">Auto-detect</property>
+                    <property name="label" translatable="yes">Autodetect</property>
                     <property name="width-request">150</property>
                     <property name="visible">True</property>
                     <property name="can-focus">True</property>
                     <property name="receives-default">True</property>
+                    <property name="tooltip-text" translatable="yes">Run autodetect routing (usually run at first start)</property>
                     <property name="halign">center</property>
                     <property name="margin-bottom">10</property>
                     <signal name="clicked" handler="btAutoDetect_clicked_cb" swapped="no"/>
@@ -637,7 +653,7 @@
           </packing>
         </child>
         <child>
-          <object class="GtkButton" id="btExit">
+          <object class="GtkButton">
             <property name="label" translatable="yes">Exit Application</property>
             <property name="visible">True</property>
             <property name="can-focus">True</property>
@@ -646,7 +662,7 @@
             <property name="margin-end">5</property>
             <property name="margin-top">10</property>
             <property name="margin-bottom">5</property>
-            <signal name="clicked" handler="btExit_clicked_cb" swapped="no"/>
+            <signal name="clicked" handler="gtk_main_quit" swapped="no"/>
           </object>
           <packing>
             <property name="expand">False</property>
@@ -733,7 +749,7 @@
                         <property name="width-request">50</property>
                         <property name="visible">True</property>
                         <property name="can-focus">True</property>
-                        <property name="hexpand">False</property>
+                        <property name="tooltip-text" translatable="yes">When to finish tapering to night brightness (hour)</property>
                         <property name="max-length">2</property>
                         <property name="width-chars">2</property>
                         <property name="max-width-chars">2</property>
@@ -758,6 +774,7 @@
                         <property name="width-request">50</property>
                         <property name="visible">True</property>
                         <property name="can-focus">True</property>
+                        <property name="tooltip-text" translatable="yes">When to finish tapering to night brightness (minute)</property>
                         <property name="max-length">2</property>
                         <property name="width-chars">2</property>
                         <property name="max-width-chars">2</property>
@@ -826,6 +843,7 @@
                         <property name="width-request">50</property>
                         <property name="visible">True</property>
                         <property name="can-focus">True</property>
+                        <property name="tooltip-text" translatable="yes">When to finish tapering to day brightness (hour)</property>
                         <property name="max-length">2</property>
                         <property name="width-chars">2</property>
                         <property name="max-width-chars">2</property>
@@ -850,6 +868,7 @@
                         <property name="width-request">50</property>
                         <property name="visible">True</property>
                         <property name="can-focus">True</property>
+                        <property name="tooltip-text" translatable="yes">When to finish tapering to day brightness (minute)</property>
                         <property name="max-length">2</property>
                         <property name="width-chars">2</property>
                         <property name="max-width-chars">2</property>
@@ -922,6 +941,7 @@
                     <property name="width-request">75</property>
                     <property name="visible">True</property>
                     <property name="can-focus">True</property>
+                    <property name="tooltip-text" translatable="yes">Monitor brightness at night (in %)</property>
                     <property name="halign">center</property>
                     <property name="max-length">3</property>
                     <property name="width-chars">3</property>
@@ -973,6 +993,7 @@
                     <property name="width-request">75</property>
                     <property name="visible">True</property>
                     <property name="can-focus">True</property>
+                    <property name="tooltip-text" translatable="yes">Monitor brightness during the day (in %)</property>
                     <property name="halign">center</property>
                     <property name="max-length">3</property>
                     <property name="width-chars">3</property>
@@ -980,6 +1001,7 @@
                     <property name="input-purpose">number</property>
                     <property name="orientation">vertical</property>
                     <property name="adjustment">adjDayBrightness</property>
+                    <property name="climb-rate">0.5</property>
                     <property name="snap-to-ticks">True</property>
                     <property name="numeric">True</property>
                     <property name="update-policy">if-valid</property>
@@ -1017,7 +1039,7 @@
                 <property name="valign">center</property>
                 <property name="margin-start">10</property>
                 <property name="margin-bottom">10</property>
-                <property name="label" translatable="yes">Monitor:</property>
+                <property name="label" translatable="yes">Display:</property>
               </object>
               <packing>
                 <property name="expand">False</property>
@@ -1029,6 +1051,7 @@
               <object class="GtkSpinButton" id="spbtMonitor">
                 <property name="visible">True</property>
                 <property name="can-focus">True</property>
+                <property name="tooltip-text" translatable="yes">Which monitor configuration to edit</property>
                 <property name="margin-start">5</property>
                 <property name="margin-bottom">10</property>
                 <property name="adjustment">adjMonitor</property>
@@ -1046,7 +1069,7 @@
                 <property name="visible">True</property>
                 <property name="can-focus">True</property>
                 <property name="receives-default">True</property>
-                <property name="tooltip-text" translatable="yes">Apply current settings to all monitors (will not be saved to file)</property>
+                <property name="tooltip-text" translatable="yes">Apply current settings to all monitors (will not be saved to file without clicking save configuration)</property>
                 <property name="margin-start">20</property>
                 <property name="margin-end">10</property>
                 <property name="margin-bottom">10</property>
@@ -1090,7 +1113,7 @@
             <property name="can-focus">True</property>
             <property name="focus-on-click">False</property>
             <property name="receives-default">True</property>
-            <property name="tooltip-text" translatable="yes">Settings</property>
+            <property name="tooltip-text" translatable="yes">Settings and exit</property>
             <property name="popover">popSettings</property>
             <child>
               <object class="GtkImage" id="imgSettings">

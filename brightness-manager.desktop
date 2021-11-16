@@ -4,5 +4,5 @@ Comment=Controls the luminescence of your monitors
 Exec=brightness-manager
 Icon=
 Type=Application
-StartupNotify=true
+StartupNotify=false
 StartupWMClass=brightness-manager

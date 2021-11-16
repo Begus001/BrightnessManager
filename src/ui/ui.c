@@ -249,6 +249,18 @@ void spbtMaxMonitors_value_changed_cb(GtkWidget *widget, gpointer data)
 	printf("UI: spbtMaxMonitors_value_changed\n");
 }
 
+void spbtFadeDuration_value_changed_cb(GtkWidget *widget, gpointer data)
+{
+	if (config_changed)
+		return;
+
+	program_config->fade_duration = gtk_spin_button_get_value_as_int(GTK_SPIN_BUTTON(widget));
+
+	cfg_notify_program_config_changed();
+
+	printf("UI: spbtFadeDuration_value_changed\n");
+}
+
 void spbtUpdateInterval_value_changed_cb(GtkWidget *widget, gpointer data)
 {
 	if (config_changed)
@@ -340,13 +352,6 @@ void btAutoDetect_clicked_cb(GtkWidget *widget, gpointer data)
 	cfg_auto_detect_i2c();
 
 	refresh_config();
-}
-
-void btExit_clicked_cb(GtkWidget *widget, gpointer data)
-{
-	printf("UI: btExit_clicked\n");
-
-	gtk_main_quit();
 }
 
 bool swEnabled_state_set_cb(GtkWidget *widget, gboolean state, gpointer user_data)
