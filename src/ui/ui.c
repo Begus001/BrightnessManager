@@ -91,7 +91,27 @@ static void refresh_config()
 	config_changed = false;
 }
 
-void winMain_destroy_cb(GtkWidget *widget, gpointer data) { gtk_main_quit(); }
+bool winMain_delete_event_cb(GtkWidget *widget, GdkEvent *event, gpointer data)
+{
+	printf("UI: winMain_delete_event\n");
+
+	if (cfg_hiding_is_enabled()) {
+		printf("UI: Hiding window\n");
+		gtk_widget_hide(GTK_WIDGET(win_main));
+		return true;
+	} else {
+		printf("UI: Hiding is disabled due to inaccessability of pipe file, exitting\n");
+		gtk_main_quit();
+		return false;
+	}
+}
+
+void ui_show_win_main()
+{
+	printf("UI: Showing window\n");
+
+	gtk_widget_show_all(GTK_WIDGET(win_main));
+}
 
 void btApply_clicked_cb(GtkWidget *widget, gpointer data)
 {
@@ -322,6 +342,13 @@ void btAutoDetect_clicked_cb(GtkWidget *widget, gpointer data)
 	refresh_config();
 }
 
+void btExit_clicked_cb(GtkWidget *widget, gpointer data)
+{
+	printf("UI: btExit_clicked\n");
+
+	gtk_main_quit();
+}
+
 bool swEnabled_state_set_cb(GtkWidget *widget, gboolean state, gpointer user_data)
 {
 	printf("UI: swEnabled_state_set %d\n", state);
@@ -367,8 +394,8 @@ void ui_init()
 
 	if (!access(cfg_get_ui_path(), F_OK)) {
 		ui_path = cfg_get_ui_path();
-	} else if (!access(CFG_UI_FILENAME, F_OK)) {
-		ui_path = CFG_UI_FILENAME;
+	} else if (!access(UI_FILENAME, F_OK)) {
+		ui_path = UI_FILENAME;
 	} else {
 		fprintf(stderr, "UI: ERROR: Couldn't find winMain.glade\n");
 		exit(1);

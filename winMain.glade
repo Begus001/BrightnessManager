@@ -8,6 +8,12 @@
     <property name="step-increment">1</property>
     <property name="page-increment">10</property>
   </object>
+  <object class="GtkAdjustment" id="adjFadeDuration">
+    <property name="lower">10</property>
+    <property name="upper">120</property>
+    <property name="step-increment">1</property>
+    <property name="page-increment">10</property>
+  </object>
   <object class="GtkAdjustment" id="adjI2C1">
     <property name="upper">100</property>
     <property name="step-increment">1</property>
@@ -247,7 +253,7 @@
             <property name="visible">True</property>
             <property name="can-focus">False</property>
             <child>
-              <!-- n-columns=2 n-rows=2 -->
+              <!-- n-columns=3 n-rows=2 -->
               <object class="GtkGrid">
                 <property name="visible">True</property>
                 <property name="can-focus">False</property>
@@ -263,7 +269,7 @@
                     <property name="margin-start">10</property>
                     <property name="margin-end">10</property>
                     <property name="margin-top">10</property>
-                    <property name="margin-bottom">10</property>
+                    <property name="margin-bottom">5</property>
                     <property name="max-length">1</property>
                     <property name="width-chars">1</property>
                     <property name="max-width-chars">1</property>
@@ -285,7 +291,7 @@
                     <property name="visible">True</property>
                     <property name="can-focus">False</property>
                     <property name="margin-start">10</property>
-                    <property name="margin-end">10</property>
+                    <property name="margin-end">5</property>
                     <property name="margin-bottom">5</property>
                     <property name="label" translatable="yes">Max Displays</property>
                   </object>
@@ -298,13 +304,13 @@
                   <object class="GtkLabel">
                     <property name="visible">True</property>
                     <property name="can-focus">False</property>
-                    <property name="margin-start">10</property>
+                    <property name="margin-start">5</property>
                     <property name="margin-end">10</property>
                     <property name="margin-bottom">5</property>
                     <property name="label" translatable="yes">Update Interval</property>
                   </object>
                   <packing>
-                    <property name="left-attach">1</property>
+                    <property name="left-attach">2</property>
                     <property name="top-attach">0</property>
                   </packing>
                 </child>
@@ -318,7 +324,7 @@
                     <property name="margin-start">10</property>
                     <property name="margin-end">10</property>
                     <property name="margin-top">10</property>
-                    <property name="margin-bottom">10</property>
+                    <property name="margin-bottom">5</property>
                     <property name="max-length">2</property>
                     <property name="width-chars">2</property>
                     <property name="max-width-chars">2</property>
@@ -327,12 +333,52 @@
                     <property name="adjustment">adjUpdateInterval</property>
                     <property name="snap-to-ticks">True</property>
                     <property name="numeric">True</property>
-                    <property name="value">5</property>
+                    <property name="value">10</property>
                     <signal name="value-changed" handler="spbtUpdateInterval_value_changed_cb" swapped="no"/>
+                  </object>
+                  <packing>
+                    <property name="left-attach">2</property>
+                    <property name="top-attach">1</property>
+                  </packing>
+                </child>
+                <child>
+                  <object class="GtkSpinButton" id="spbtFadeDuration">
+                    <property name="width-request">50</property>
+                    <property name="visible">True</property>
+                    <property name="can-focus">True</property>
+                    <property name="halign">center</property>
+                    <property name="valign">center</property>
+                    <property name="margin-start">10</property>
+                    <property name="margin-end">10</property>
+                    <property name="margin-top">10</property>
+                    <property name="margin-bottom">5</property>
+                    <property name="max-length">3</property>
+                    <property name="width-chars">3</property>
+                    <property name="max-width-chars">3</property>
+                    <property name="input-purpose">number</property>
+                    <property name="orientation">vertical</property>
+                    <property name="adjustment">adjFadeDuration</property>
+                    <property name="snap-to-ticks">True</property>
+                    <property name="numeric">True</property>
+                    <property name="value">60</property>
                   </object>
                   <packing>
                     <property name="left-attach">1</property>
                     <property name="top-attach">1</property>
+                  </packing>
+                </child>
+                <child>
+                  <object class="GtkLabel">
+                    <property name="visible">True</property>
+                    <property name="can-focus">False</property>
+                    <property name="margin-start">5</property>
+                    <property name="margin-end">5</property>
+                    <property name="margin-bottom">5</property>
+                    <property name="label" translatable="yes">Fade Duration</property>
+                  </object>
+                  <packing>
+                    <property name="left-attach">1</property>
+                    <property name="top-attach">0</property>
                   </packing>
                 </child>
               </object>
@@ -590,6 +636,24 @@
             <property name="position">1</property>
           </packing>
         </child>
+        <child>
+          <object class="GtkButton" id="btExit">
+            <property name="label" translatable="yes">Exit Application</property>
+            <property name="visible">True</property>
+            <property name="can-focus">True</property>
+            <property name="receives-default">True</property>
+            <property name="margin-start">5</property>
+            <property name="margin-end">5</property>
+            <property name="margin-top">10</property>
+            <property name="margin-bottom">5</property>
+            <signal name="clicked" handler="btExit_clicked_cb" swapped="no"/>
+          </object>
+          <packing>
+            <property name="expand">False</property>
+            <property name="fill">True</property>
+            <property name="position">2</property>
+          </packing>
+        </child>
       </object>
     </child>
   </object>
@@ -608,7 +672,7 @@
     <property name="can-focus">True</property>
     <property name="resizable">False</property>
     <property name="icon-name">computer</property>
-    <signal name="destroy" handler="winMain_destroy_cb" swapped="no"/>
+    <signal name="delete-event" handler="winMain_delete_event_cb" swapped="no"/>
     <child>
       <object class="GtkBox">
         <property name="visible">True</property>
@@ -1016,7 +1080,7 @@
             <property name="visible">True</property>
             <property name="can-focus">True</property>
             <property name="tooltip-text" translatable="yes">Enable brightness regulation</property>
-            <property name="state">True</property>
+            <property name="active">True</property>
             <signal name="state-set" handler="swEnabled_state_set_cb" swapped="no"/>
           </object>
         </child>

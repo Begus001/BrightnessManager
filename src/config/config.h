@@ -7,9 +7,12 @@
 
 #define CFG_REL_PATH "/.local/share/brightness-manager/"
 #define CFG_FILENAME "config.json"
-#define CFG_UI_FILENAME "winMain.glade"
+#define UI_FILENAME "winMain.glade"
+#define PIPE_FILE "bm-pipe"
 
-#define CFG_PROC_COMM_NAME "brightness-mana"
+#define PROC_COMM_NAME "brightness-mana"
+
+#define PIPE_OPEN_MSG "open\n"
 
 #define DEFAULT_SUNSET_HOUR "20"
 #define DEFAULT_SUNSET_MIN "0"
@@ -18,7 +21,7 @@
 #define DEFAULT_NIGHT_BRIGHTNESS "0"
 #define DEFAULT_DAY_BRIGHTNESS "100"
 #define DEFAULT_MAX_DISPLAYS "3"
-#define DEFAULT_UPDATE_INTERVAL "30"
+#define DEFAULT_UPDATE_INTERVAL "10"
 #define DEFAULT_I2C "0"
 
 #define I2C_OFFSET 2
@@ -57,6 +60,7 @@ void cfg_notify_display_configs_cancelled();
 void cfg_auto_detect_i2c();
 
 char *cfg_get_ui_path();
+bool cfg_hiding_is_enabled();
 
 void cfg_init();
 

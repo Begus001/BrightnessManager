@@ -1,22 +1,30 @@
 #include "cJSON.h"
 #include <assert.h>
+#include <fcntl.h>
 #include <stdbool.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 #include <sys/stat.h>
+#include <unistd.h>
 
+#include "../ui/ui.h"
 #include "config.h"
 
 static display_config_t display_configs[MAX_DISPLAYS], display_configs_backup[MAX_DISPLAYS];
 static program_config_t program_config;
 
+static pthread_t unhide_listener;
+
 static bool display_configs_changed = false;
 
-char *cfg_user_home;
-char *cfg_file_path;
-char *cfg_file_dir;
-char *cfg_ui_path;
+static char *user_home;
+static char *cfg_file_path;
+static char *cfg_file_dir;
+static char *ui_path;
+static char *pipe_file;
+
+static bool hiding_enabled = true;
 
 display_config_t *cfg_get_display_configs() { return display_configs; }
 
@@ -353,26 +361,69 @@ void cfg_auto_detect_i2c()
 
 static void get_config_path()
 {
-	cfg_user_home = malloc(sizeof(getenv("HOME")));
-	strcpy(cfg_user_home, getenv("HOME"));
+	user_home = malloc(sizeof(getenv("HOME")));
+	strcpy(user_home, getenv("HOME"));
 
-	cfg_file_dir = malloc(strlen(cfg_user_home) + sizeof(CFG_REL_PATH));
-	strcpy(cfg_file_dir, cfg_user_home);
+	cfg_file_dir = malloc(strlen(user_home) + sizeof(CFG_REL_PATH));
+	strcpy(cfg_file_dir, user_home);
 	strcat(cfg_file_dir, CFG_REL_PATH);
 
 	cfg_file_path = malloc(strlen(cfg_file_dir) + sizeof(CFG_FILENAME));
 	strcpy(cfg_file_path, cfg_file_dir);
 	strcat(cfg_file_path, CFG_FILENAME);
 
-	cfg_ui_path = malloc(strlen(cfg_file_dir) + sizeof(CFG_UI_FILENAME));
-	strcpy(cfg_ui_path, cfg_file_dir);
-	strcat(cfg_ui_path, CFG_UI_FILENAME);
+	ui_path = malloc(strlen(cfg_file_dir) + sizeof(UI_FILENAME));
+	strcpy(ui_path, cfg_file_dir);
+	strcat(ui_path, UI_FILENAME);
 
-	if (access(cfg_file_dir, F_OK))
+	pipe_file = malloc(strlen(cfg_file_dir) + sizeof(PIPE_FILE));
+	strcpy(pipe_file, cfg_file_dir);
+	strcat(pipe_file, PIPE_FILE);
+
+	if (access(cfg_file_dir, F_OK)) { // If path exists -> false
 		cfg_file_path = CFG_FILENAME;
+		pipe_file = PIPE_FILE;
+	}
 }
 
-char *cfg_get_ui_path() { return cfg_ui_path; }
+static void *unhide_worker()
+{
+	int num = 0;
+	char buf[1024];
+	int fd = open(pipe_file, O_RDONLY);
+	while (true) {
+		do {
+			num = read(fd, buf, sizeof(buf));
+			usleep(100000);
+		} while (num <= 0);
+
+		if (!strcmp(buf, PIPE_OPEN_MSG)) {
+			printf("CFG: Got opening signal\n");
+			ui_show_win_main();
+		}
+		memset(buf, 0, sizeof(buf));
+	}
+
+	close(fd);
+
+	return NULL;
+}
+
+static void check_pipe_file()
+{
+	if (access(pipe_file, F_OK)) {
+		if (mkfifo(pipe_file, 0660)) {
+			printf("CFG: Could not access or create pipe file at %s, window hiding disabled\n",
+				pipe_file);
+			hiding_enabled = false;
+			return;
+		}
+	}
+}
+
+char *cfg_get_ui_path() { return ui_path; }
+
+bool cfg_hiding_is_enabled() { return hiding_enabled; }
 
 static bool check_already_running()
 {
@@ -382,7 +433,7 @@ static bool check_already_running()
 
 	sprintf(pid, "%d\n", getpid());
 
-	FILE *pipe = popen("pgrep "CFG_PROC_COMM_NAME, "r");
+	FILE *pipe = popen("pgrep " PROC_COMM_NAME, "r");
 
 	assert(pipe && "Couldn't open pipe to process (check instance failed)");
 
@@ -406,14 +457,37 @@ static bool check_already_running()
 	fclose(pipe);
 }
 
+static void send_show_signal()
+{
+	if (access(pipe_file, F_OK)) {
+		printf("CFG: Could not find pipe file, close the running instance and start a new one "
+			   "instead\n");
+		return;
+	}
+
+	printf("CFG: Sending open signal to running instance\n");
+
+	int fd = open(pipe_file, O_WRONLY);
+	write(fd, PIPE_OPEN_MSG, sizeof(PIPE_OPEN_MSG));
+	close(fd);
+}
+
 void cfg_init()
 {
 	get_config_path();
+	check_pipe_file();
 
 	if (check_already_running()) {
-		// send_show_signal();
-		exit(0);
+		send_show_signal();
+		usleep(1000000);
+		if (check_already_running()) { // Stupid bug where GTK crashes due to SEGV when calling
+									   // gtk_widget_show, so it's just checking if it crashed and
+									   // launching another instance
+			exit(0);
+		}
 	}
+
+	pthread_create(&unhide_listener, NULL, unhide_worker, NULL);
 
 	FILE *file = fopen(cfg_file_path, "r+");
 
