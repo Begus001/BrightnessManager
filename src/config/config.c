@@ -316,8 +316,8 @@ static void create_default_config_file()
 void cfg_auto_detect_i2c()
 {
 	FILE *pipe;
-	char cmd_output[4096];
-	char buf[128];
+	char cmd_output[4096] = "";
+	char buf[128] = "";
 
 	printf("CFG: Auto-detecting I2C busses\n");
 
@@ -374,9 +374,46 @@ static void get_config_path()
 
 char *cfg_get_ui_path() { return cfg_ui_path; }
 
+static bool check_already_running()
+{
+	char buf[32] = "";
+	char cmd_output[1024] = "";
+	char pid[1024];
+
+	sprintf(pid, "%d\n", getpid());
+
+	FILE *pipe = popen("pgrep "CFG_PROC_COMM_NAME, "r");
+
+	assert(pipe && "Couldn't open pipe to process (check instance failed)");
+
+	printf("CFG: Checking if another instance already running\n");
+
+	while (fgets(buf, sizeof(buf), pipe)) {
+		strcat(cmd_output, buf);
+	}
+
+	if (!strcmp(cmd_output, pid)) {
+		printf("CFG: No running instance found\n");
+		return false;
+	} else if (!strcmp(cmd_output, "\n")) {
+		printf("CFG: No running instance found\n");
+		return false;
+	} else {
+		printf("CFG: Found running instance\n");
+		return true;
+	}
+
+	fclose(pipe);
+}
+
 void cfg_init()
 {
 	get_config_path();
+
+	if (check_already_running()) {
+		// send_show_signal();
+		exit(0);
+	}
 
 	FILE *file = fopen(cfg_file_path, "r+");
 

@@ -9,6 +9,8 @@
 #define CFG_FILENAME "config.json"
 #define CFG_UI_FILENAME "winMain.glade"
 
+#define CFG_PROC_COMM_NAME "brightness-mana"
+
 #define DEFAULT_SUNSET_HOUR "20"
 #define DEFAULT_SUNSET_MIN "0"
 #define DEFAULT_SUNRISE_HOUR "6"
