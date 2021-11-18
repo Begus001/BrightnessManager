@@ -21,7 +21,7 @@ static void set_brightness_cmd(unsigned int i2c, unsigned int brightness)
 {
 	char cmd[64];
 
-	sprintf(cmd, "sudo ddccontrol -r 0x10 -w %d dev:/dev/i2c-%d 2>/dev/null", brightness, i2c);
+	sprintf(cmd, "ddccontrol -r 0x10 -w %d dev:/dev/i2c-%d 2>/dev/null", brightness, i2c);
 
 	FILE *pipe = popen(cmd, "r");
 

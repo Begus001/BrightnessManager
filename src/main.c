@@ -8,6 +8,7 @@ int main(int argc, char *argv[])
 {
 	setbuf(stdout, NULL);
 	gtk_init(&argc, &argv);
+
 	cfg_init();
 	bm_init();
 	ui_init();

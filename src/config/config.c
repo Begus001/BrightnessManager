@@ -18,7 +18,6 @@ static pthread_t unhide_listener;
 
 static bool display_configs_changed = false;
 
-static char *user_home;
 static char *cfg_file_path;
 static char *cfg_file_dir;
 static char *ui_path;
@@ -58,7 +57,10 @@ static void write_to_file(cJSON *json)
 {
 	FILE *file = fopen(cfg_file_path, "w+");
 
-	assert(file && "Couldn't load file from config path");
+	if (!file) {
+		fprintf(stderr, "\e[91mERROR: Couldn't load config file\nDid you forget to run the application as root?\n\e[0m");
+		exit(1);
+	}
 
 	printf("CFG: Writing configuration to file %s\n", cfg_file_path);
 
@@ -367,12 +369,8 @@ void cfg_auto_detect_i2c()
 
 static void get_config_path()
 {
-	user_home = malloc(sizeof(getenv("HOME")));
-	strcpy(user_home, getenv("HOME"));
-
-	cfg_file_dir = malloc(strlen(user_home) + sizeof(CFG_REL_PATH));
-	strcpy(cfg_file_dir, user_home);
-	strcat(cfg_file_dir, CFG_REL_PATH);
+	cfg_file_dir = malloc(sizeof(CFG_PATH));
+	strcpy(cfg_file_dir, CFG_PATH);
 
 	cfg_file_path = malloc(strlen(cfg_file_dir) + sizeof(CFG_FILENAME));
 	strcpy(cfg_file_path, cfg_file_dir);
@@ -387,9 +385,17 @@ static void get_config_path()
 	strcat(pipe_file, PIPE_FILE);
 
 	if (access(cfg_file_dir, F_OK)) { // If path exists -> false
+		printf("CFG: Couldn't access system paths, reverting to portable mode\n");
 		cfg_file_path = CFG_FILENAME;
 		pipe_file = PIPE_FILE;
+		ui_path = UI_FILENAME;
 	}
+
+	printf("CFG: Paths:\n");
+	printf("  cfg_file_path: %s\n", cfg_file_path);
+	printf("  ui_path:       %s\n", ui_path);
+	printf("  pipe_file:     %s\n", pipe_file);
+	printf("\n");
 }
 
 static void *unhide_worker()

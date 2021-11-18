@@ -5,7 +5,7 @@
 
 #define MAX_DISPLAYS 6
 
-#define CFG_REL_PATH "/.local/share/brightness-manager/"
+#define CFG_PATH "/etc/brightness-manager/"
 #define CFG_FILENAME "config.json"
 #define UI_FILENAME "winMain.glade"
 #define PIPE_FILE "bm-pipe"

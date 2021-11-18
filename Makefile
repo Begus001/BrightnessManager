@@ -9,27 +9,41 @@ UI_FILE = winMain.glade
 DESKTOP_FILE = brightness-manager.desktop
 PIPE_FILE = bm-pipe
 CONFIG_FILE = config.json
+POLKIT_ACTION_FILE = org.freedesktop.policykit.brightness-manager.policy
 
-SHARE_PATH = $(HOME)/.local/share/brightness-manager
-BIN_PATH = $(HOME)/.local/bin
-DESKTOP_PATH = $(HOME)/.local/share/applications
+ETC_PATH = /etc/brightness-manager
+BIN_PATH = /usr/local/bin
+DESKTOP_PATH = /usr/share/applications
+POLKIT_ACTION_PATH = /usr/share/polkit-1/actions
+
+ID = $(shell id -u)
 
 $(BIN_NAME): $(SRCS)
 	$(GCC) $^ -o $@ $(CFLAGS)
 
 run: $(BIN_NAME)
-	sudo -u $(USER) ./$^
+	sudo ./$^
 
 install: $(BIN_NAME) $(ICON_FILE) $(UI_FILE) $(DESKTOP_FILE)
-	mkdir -p $(SHARE_PATH)
-	mkdir -p $(BIN_PATH)
-	mkdir -p $(DESKTOP_PATH)
-	cp -f $(ICON_FILE) $(SHARE_PATH)
-	cp -f $(UI_FILE) $(SHARE_PATH)
+    ifneq ($(ID),0)
+		@echo >&2 "\033[1;31mERROR: You have to run install as root\033[1;37m"
+		@exit 1
+    endif
+	mkdir -p $(ETC_PATH)
+	cp -f $(ICON_FILE) $(ETC_PATH)
+	cp -f $(UI_FILE) $(ETC_PATH)
 	cp -f $(DESKTOP_FILE) $(DESKTOP_PATH)
 	cp -f $(BIN_NAME) $(BIN_PATH)
-	sed -i "s,Icon=.*,Icon=$(SHARE_PATH)/$(ICON_FILE),g" $(DESKTOP_PATH)/$(DESKTOP_FILE)
-	sed -i "s,Exec=.*,Exec=sudo -u $(USER) $(BIN_PATH)/$(BIN_NAME),g" $(DESKTOP_PATH)/$(DESKTOP_FILE)
+	cp -f $(POLKIT_ACTION_FILE) $(POLKIT_ACTION_PATH)
+	sed -i "s,Icon=.*,Icon=$(ETC_PATH)/$(ICON_FILE),g" $(DESKTOP_PATH)/$(DESKTOP_FILE)
+	sed -i "s,Exec=.*,Exec=pkexec $(BIN_PATH)/$(BIN_NAME),g" $(DESKTOP_PATH)/$(DESKTOP_FILE)
 
 uninstall:
-	rm -rf $(SHARE_PATH) $(BIN_PATH)/$(BIN_NAME) $(DESKTOP_PATH)/$(DESKTOP_FILE) $(PIPE_FILE) $(CONFIG_FILE) $(BIN_NAME)
+    ifeq ($(ID),0)
+		rm -rf $(ETC_PATH) $(BIN_PATH)/$(BIN_NAME) $(DESKTOP_PATH)/$(DESKTOP_FILE) $(PIPE_FILE) $(CONFIG_FILE) $(BIN_NAME) $(POLKIT_ACTION_PATH)/$(POLKIT_ACTION_FILE)
+    else
+		rm -rf $(PIPE_FILE) $(CONFIG_FILE) $(BIN_NAME)
+		@echo >&2 "\033[1;33mWARNING: Only files in the current directory were uninstalled"
+		@echo >&2 "WARNING: To uninstall the remaining files, run make uninstall as root"
+    endif
+	
