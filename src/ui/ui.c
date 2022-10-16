@@ -152,6 +152,14 @@ void btApplyToAll_clicked_cb(GtkWidget *widget, gpointer data)
 	printf("UI: btApplyToAll_clicked\n");
 }
 
+bool pad_zeroes_cb(GtkSpinButton *spbt, gpointer data)
+{
+	char buf[3];
+	sprintf(buf, "%02d", gtk_spin_button_get_value_as_int(GTK_SPIN_BUTTON(spbt)));
+	gtk_entry_set_text(GTK_ENTRY(spbt), buf);
+	return true;
+}
+
 void spbtSunsetHour_value_changed_cb(GtkWidget *widget, gpointer data)
 {
 	if (config_changed)
@@ -411,10 +419,7 @@ void spbtManualBrightness_activate_cb(GtkWidget *widget, gpointer data)
 
 void menu_item_activate_cb(GtkMenuItem *item, gpointer data) { toggle_hide(); }
 
-static void quit()
-{
-	exit(0);
-}
+static void quit() { exit(0); }
 
 void setup_app_indicator()
 {
@@ -461,9 +466,13 @@ void ui_init(GtkApplication *_app)
 	sw_enabled = GTK_SWITCH(gtk_builder_get_object(builder, "swEnabled"));
 
 	spbt_sunset_hour = GTK_SPIN_BUTTON(gtk_builder_get_object(builder, "spbtSunsetHour"));
+	g_signal_connect(spbt_sunset_hour, "output", G_CALLBACK(pad_zeroes_cb), NULL);
 	spbt_sunset_min = GTK_SPIN_BUTTON(gtk_builder_get_object(builder, "spbtSunsetMinute"));
+	g_signal_connect(spbt_sunset_min, "output", G_CALLBACK(pad_zeroes_cb), NULL);
 	spbt_sunrise_hour = GTK_SPIN_BUTTON(gtk_builder_get_object(builder, "spbtSunriseHour"));
+	g_signal_connect(spbt_sunrise_hour, "output", G_CALLBACK(pad_zeroes_cb), NULL);
 	spbt_sunrise_min = GTK_SPIN_BUTTON(gtk_builder_get_object(builder, "spbtSunriseMinute"));
+	g_signal_connect(spbt_sunrise_min, "output", G_CALLBACK(pad_zeroes_cb), NULL);
 	spbt_night_brightness = GTK_SPIN_BUTTON(gtk_builder_get_object(builder, "spbtNightBrightness"));
 	spbt_day_brightness = GTK_SPIN_BUTTON(gtk_builder_get_object(builder, "spbtDayBrightness"));
 	spbt_monitor = GTK_SPIN_BUTTON(gtk_builder_get_object(builder, "spbtMonitor"));
