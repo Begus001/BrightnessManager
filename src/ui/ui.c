@@ -31,6 +31,7 @@ static GtkButton *bt_apply_manual;
 
 static GtkSpinButton *spbt_max_monitors;
 static GtkSpinButton *spbt_update_interval;
+static GtkCheckButton *cb_open_hidden;
 static GtkSpinButton *spbt_i2c1;
 static GtkSpinButton *spbt_i2c2;
 static GtkSpinButton *spbt_i2c3;
@@ -81,6 +82,7 @@ static void refresh_config()
 
 	gtk_spin_button_set_value(spbt_max_monitors, program_config->max_displays);
 	gtk_spin_button_set_value(spbt_update_interval, program_config->update_interval);
+	gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(cb_open_hidden), program_config->open_hidden);
 	gtk_spin_button_set_value(spbt_i2c1, program_config->i2c1);
 	gtk_spin_button_set_value(spbt_i2c2, program_config->i2c2);
 	gtk_spin_button_set_value(spbt_i2c3, program_config->i2c3);
@@ -116,7 +118,7 @@ static void toggle_hide()
 {
 	bool hidden = cfg_is_window_hidden();
 	if (hidden) {
-		ui_show();
+		ui_show(false);
 	} else {
 		ui_hide();
 	}
@@ -297,6 +299,18 @@ void spbtUpdateInterval_value_changed_cb(GtkWidget *widget, gpointer data)
 	printf("UI: spbtUpdateInterval_value_changed\n");
 }
 
+void cbOpenHidden_toggled_cb(GtkWidget *widget, gpointer data)
+{
+	if (config_changed)
+		return;
+
+	program_config->open_hidden = gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(widget));
+
+	cfg_notify_program_config_changed();
+
+	printf("UI: cbOpenHidden_toggled\n");
+}
+
 void spbtI2C1_value_changed_cb(GtkWidget *widget, gpointer data)
 {
 	if (config_changed)
@@ -466,13 +480,9 @@ void ui_init(GtkApplication *_app)
 	sw_enabled = GTK_SWITCH(gtk_builder_get_object(builder, "swEnabled"));
 
 	spbt_sunset_hour = GTK_SPIN_BUTTON(gtk_builder_get_object(builder, "spbtSunsetHour"));
-	g_signal_connect(spbt_sunset_hour, "output", G_CALLBACK(pad_zeroes_cb), NULL);
 	spbt_sunset_min = GTK_SPIN_BUTTON(gtk_builder_get_object(builder, "spbtSunsetMinute"));
-	g_signal_connect(spbt_sunset_min, "output", G_CALLBACK(pad_zeroes_cb), NULL);
 	spbt_sunrise_hour = GTK_SPIN_BUTTON(gtk_builder_get_object(builder, "spbtSunriseHour"));
-	g_signal_connect(spbt_sunrise_hour, "output", G_CALLBACK(pad_zeroes_cb), NULL);
 	spbt_sunrise_min = GTK_SPIN_BUTTON(gtk_builder_get_object(builder, "spbtSunriseMinute"));
-	g_signal_connect(spbt_sunrise_min, "output", G_CALLBACK(pad_zeroes_cb), NULL);
 	spbt_night_brightness = GTK_SPIN_BUTTON(gtk_builder_get_object(builder, "spbtNightBrightness"));
 	spbt_day_brightness = GTK_SPIN_BUTTON(gtk_builder_get_object(builder, "spbtDayBrightness"));
 	spbt_monitor = GTK_SPIN_BUTTON(gtk_builder_get_object(builder, "spbtMonitor"));
@@ -484,6 +494,7 @@ void ui_init(GtkApplication *_app)
 
 	spbt_max_monitors = GTK_SPIN_BUTTON(gtk_builder_get_object(builder, "spbtMaxMonitors"));
 	spbt_update_interval = GTK_SPIN_BUTTON(gtk_builder_get_object(builder, "spbtUpdateInterval"));
+	cb_open_hidden = GTK_CHECK_BUTTON(gtk_builder_get_object(builder, "cbOpenHidden"));
 	spbt_i2c1 = GTK_SPIN_BUTTON(gtk_builder_get_object(builder, "spbtI2C1"));
 	spbt_i2c2 = GTK_SPIN_BUTTON(gtk_builder_get_object(builder, "spbtI2C2"));
 	spbt_i2c3 = GTK_SPIN_BUTTON(gtk_builder_get_object(builder, "spbtI2C3"));
@@ -498,6 +509,9 @@ void ui_init(GtkApplication *_app)
 
 	refresh_config();
 
-	gtk_window_present(win_main);
+	if (!program_config->open_hidden)
+		gtk_window_present(win_main);
+	else
+		ui_hide();
 	gtk_main();
 }

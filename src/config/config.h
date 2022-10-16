@@ -23,9 +23,10 @@
 #define DEFAULT_MAX_DISPLAYS "6"
 #define DEFAULT_UPDATE_INTERVAL "15"
 #define DEFAULT_FADE_DURATION "60"
+#define DEFAULT_OPEN_HIDDEN "0"
 #define DEFAULT_I2C "0"
 
-#define I2C_OFFSET 3
+#define I2C_OFFSET 4
 
 typedef struct {
 	unsigned int sunset_hour;
@@ -40,6 +41,7 @@ typedef struct {
 	unsigned int max_displays;
 	unsigned int update_interval;
 	unsigned int fade_duration;
+	unsigned int open_hidden;
 	unsigned int i2c1;
 	unsigned int i2c2;
 	unsigned int i2c3;

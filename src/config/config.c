@@ -82,6 +82,7 @@ void cfg_notify_program_config_changed()
 	cJSON *update_interval
 		= cJSON_GetObjectItemCaseSensitive(program_config_json, "update-interval");
 	cJSON *fade_duration = cJSON_GetObjectItemCaseSensitive(program_config_json, "fade-duration");
+	cJSON *open_hidden = cJSON_GetObjectItemCaseSensitive(program_config_json, "open-hidden");
 	cJSON *i2c1 = cJSON_GetObjectItemCaseSensitive(program_config_json, "i2c1");
 	cJSON *i2c2 = cJSON_GetObjectItemCaseSensitive(program_config_json, "i2c2");
 	cJSON *i2c3 = cJSON_GetObjectItemCaseSensitive(program_config_json, "i2c3");
@@ -89,7 +90,7 @@ void cfg_notify_program_config_changed()
 	cJSON *i2c5 = cJSON_GetObjectItemCaseSensitive(program_config_json, "i2c5");
 	cJSON *i2c6 = cJSON_GetObjectItemCaseSensitive(program_config_json, "i2c6");
 
-	assert(max_displays && update_interval && fade_duration && i2c1 && i2c2 && i2c3 && i2c4 && i2c5
+	assert(max_displays && update_interval && fade_duration && open_hidden && i2c1 && i2c2 && i2c3 && i2c4 && i2c5
 		&& i2c6 && "JSON parse error");
 
 	sprintf(val_buf, "%d", program_config.max_displays);
@@ -98,6 +99,8 @@ void cfg_notify_program_config_changed()
 	cJSON_SetValuestring(update_interval, val_buf);
 	sprintf(val_buf, "%d", program_config.fade_duration);
 	cJSON_SetValuestring(fade_duration, val_buf);
+	sprintf(val_buf, "%d", program_config.open_hidden);
+	cJSON_SetValuestring(open_hidden, val_buf);
 	sprintf(val_buf, "%d", program_config.i2c1);
 	cJSON_SetValuestring(i2c1, val_buf);
 	sprintf(val_buf, "%d", program_config.i2c2);
@@ -253,6 +256,7 @@ static void load_config()
 	cJSON *update_interval
 		= cJSON_GetObjectItemCaseSensitive(program_config_json, "update-interval");
 	cJSON *fade_duration = cJSON_GetObjectItemCaseSensitive(program_config_json, "fade-duration");
+	cJSON *open_hidden = cJSON_GetObjectItemCaseSensitive(program_config_json, "open-hidden");
 	cJSON *i2c1 = cJSON_GetObjectItemCaseSensitive(program_config_json, "i2c1");
 	cJSON *i2c2 = cJSON_GetObjectItemCaseSensitive(program_config_json, "i2c2");
 	cJSON *i2c3 = cJSON_GetObjectItemCaseSensitive(program_config_json, "i2c3");
@@ -266,6 +270,7 @@ static void load_config()
 	program_config.max_displays = atoi(cJSON_GetStringValue(max_displays));
 	program_config.update_interval = atoi(cJSON_GetStringValue(update_interval));
 	program_config.fade_duration = atoi(cJSON_GetStringValue(fade_duration));
+	program_config.open_hidden = atoi(cJSON_GetStringValue(open_hidden));
 	program_config.i2c1 = atoi(cJSON_GetStringValue(i2c1));
 	program_config.i2c2 = atoi(cJSON_GetStringValue(i2c2));
 	program_config.i2c3 = atoi(cJSON_GetStringValue(i2c3));
@@ -308,6 +313,7 @@ static void create_default_config_file()
 	cJSON_AddStringToObject(program_config_json, "max-displays", DEFAULT_MAX_DISPLAYS);
 	cJSON_AddStringToObject(program_config_json, "update-interval", DEFAULT_UPDATE_INTERVAL);
 	cJSON_AddStringToObject(program_config_json, "fade-duration", DEFAULT_FADE_DURATION);
+	cJSON_AddStringToObject(program_config_json, "open-hidden", DEFAULT_OPEN_HIDDEN);
 	cJSON_AddStringToObject(program_config_json, "i2c1", DEFAULT_I2C);
 	cJSON_AddStringToObject(program_config_json, "i2c2", DEFAULT_I2C);
 	cJSON_AddStringToObject(program_config_json, "i2c3", DEFAULT_I2C);

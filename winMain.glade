@@ -256,138 +256,166 @@
             <property name="visible">True</property>
             <property name="can-focus">False</property>
             <child>
-              <!-- n-columns=3 n-rows=2 -->
-              <object class="GtkGrid">
+              <object class="GtkBox">
                 <property name="visible">True</property>
                 <property name="can-focus">False</property>
-                <property name="halign">center</property>
-                <property name="valign">center</property>
+                <property name="orientation">vertical</property>
                 <child>
-                  <object class="GtkSpinButton" id="spbtMaxMonitors">
-                    <property name="width-request">50</property>
-                    <property name="visible">True</property>
-                    <property name="can-focus">True</property>
-                    <property name="tooltip-text" translatable="yes">How many displays there are to regulate the brightness on (usually autodetected)</property>
-                    <property name="halign">center</property>
-                    <property name="valign">center</property>
-                    <property name="margin-start">10</property>
-                    <property name="margin-end">10</property>
-                    <property name="margin-top">10</property>
-                    <property name="margin-bottom">5</property>
-                    <property name="max-length">1</property>
-                    <property name="width-chars">1</property>
-                    <property name="max-width-chars">1</property>
-                    <property name="input-purpose">digits</property>
-                    <property name="orientation">vertical</property>
-                    <property name="adjustment">adjMaxDisplays</property>
-                    <property name="snap-to-ticks">True</property>
-                    <property name="numeric">True</property>
-                    <property name="value">3</property>
-                    <signal name="value-changed" handler="spbtMaxMonitors_value_changed_cb" swapped="no"/>
-                  </object>
-                  <packing>
-                    <property name="left-attach">0</property>
-                    <property name="top-attach">1</property>
-                  </packing>
-                </child>
-                <child>
-                  <object class="GtkLabel">
+                  <!-- n-columns=3 n-rows=2 -->
+                  <object class="GtkGrid">
                     <property name="visible">True</property>
                     <property name="can-focus">False</property>
-                    <property name="margin-start">10</property>
-                    <property name="margin-end">5</property>
-                    <property name="margin-bottom">5</property>
-                    <property name="label" translatable="yes">Max Displays</property>
-                  </object>
-                  <packing>
-                    <property name="left-attach">0</property>
-                    <property name="top-attach">0</property>
-                  </packing>
-                </child>
-                <child>
-                  <object class="GtkLabel">
-                    <property name="visible">True</property>
-                    <property name="can-focus">False</property>
-                    <property name="margin-start">5</property>
-                    <property name="margin-end">10</property>
-                    <property name="margin-bottom">5</property>
-                    <property name="label" translatable="yes">Update Interval</property>
-                  </object>
-                  <packing>
-                    <property name="left-attach">2</property>
-                    <property name="top-attach">0</property>
-                  </packing>
-                </child>
-                <child>
-                  <object class="GtkSpinButton" id="spbtUpdateInterval">
-                    <property name="width-request">50</property>
-                    <property name="visible">True</property>
-                    <property name="can-focus">True</property>
-                    <property name="tooltip-text" translatable="yes">Interval at which brightness is regulated (in seconds)</property>
                     <property name="halign">center</property>
                     <property name="valign">center</property>
-                    <property name="margin-start">10</property>
-                    <property name="margin-end">10</property>
-                    <property name="margin-top">10</property>
-                    <property name="margin-bottom">5</property>
-                    <property name="max-length">2</property>
-                    <property name="width-chars">2</property>
-                    <property name="max-width-chars">2</property>
-                    <property name="input-purpose">digits</property>
-                    <property name="orientation">vertical</property>
-                    <property name="adjustment">adjUpdateInterval</property>
-                    <property name="climb-rate">0.5</property>
-                    <property name="snap-to-ticks">True</property>
-                    <property name="numeric">True</property>
-                    <property name="value">15</property>
-                    <signal name="value-changed" handler="spbtUpdateInterval_value_changed_cb" swapped="no"/>
+                    <child>
+                      <object class="GtkSpinButton" id="spbtMaxMonitors">
+                        <property name="width-request">50</property>
+                        <property name="visible">True</property>
+                        <property name="can-focus">True</property>
+                        <property name="tooltip-text" translatable="yes">How many displays there are to regulate the brightness on (usually autodetected)</property>
+                        <property name="halign">center</property>
+                        <property name="valign">center</property>
+                        <property name="margin-start">10</property>
+                        <property name="margin-end">10</property>
+                        <property name="margin-top">10</property>
+                        <property name="margin-bottom">5</property>
+                        <property name="max-length">1</property>
+                        <property name="width-chars">1</property>
+                        <property name="max-width-chars">1</property>
+                        <property name="input-purpose">digits</property>
+                        <property name="orientation">vertical</property>
+                        <property name="adjustment">adjMaxDisplays</property>
+                        <property name="snap-to-ticks">True</property>
+                        <property name="numeric">True</property>
+                        <property name="value">3</property>
+                        <signal name="value-changed" handler="spbtMaxMonitors_value_changed_cb" swapped="no"/>
+                      </object>
+                      <packing>
+                        <property name="left-attach">0</property>
+                        <property name="top-attach">1</property>
+                      </packing>
+                    </child>
+                    <child>
+                      <object class="GtkLabel">
+                        <property name="visible">True</property>
+                        <property name="can-focus">False</property>
+                        <property name="margin-start">10</property>
+                        <property name="margin-end">5</property>
+                        <property name="margin-bottom">5</property>
+                        <property name="label" translatable="yes">Max Displays</property>
+                      </object>
+                      <packing>
+                        <property name="left-attach">0</property>
+                        <property name="top-attach">0</property>
+                      </packing>
+                    </child>
+                    <child>
+                      <object class="GtkLabel">
+                        <property name="visible">True</property>
+                        <property name="can-focus">False</property>
+                        <property name="margin-start">5</property>
+                        <property name="margin-end">10</property>
+                        <property name="margin-bottom">5</property>
+                        <property name="label" translatable="yes">Update Interval</property>
+                      </object>
+                      <packing>
+                        <property name="left-attach">2</property>
+                        <property name="top-attach">0</property>
+                      </packing>
+                    </child>
+                    <child>
+                      <object class="GtkSpinButton" id="spbtUpdateInterval">
+                        <property name="width-request">50</property>
+                        <property name="visible">True</property>
+                        <property name="can-focus">True</property>
+                        <property name="tooltip-text" translatable="yes">Interval at which brightness is regulated (in seconds)</property>
+                        <property name="halign">center</property>
+                        <property name="valign">center</property>
+                        <property name="margin-start">10</property>
+                        <property name="margin-end">10</property>
+                        <property name="margin-top">10</property>
+                        <property name="margin-bottom">5</property>
+                        <property name="max-length">2</property>
+                        <property name="width-chars">2</property>
+                        <property name="max-width-chars">2</property>
+                        <property name="input-purpose">digits</property>
+                        <property name="orientation">vertical</property>
+                        <property name="adjustment">adjUpdateInterval</property>
+                        <property name="climb-rate">0.5</property>
+                        <property name="snap-to-ticks">True</property>
+                        <property name="numeric">True</property>
+                        <property name="value">15</property>
+                        <signal name="value-changed" handler="spbtUpdateInterval_value_changed_cb" swapped="no"/>
+                      </object>
+                      <packing>
+                        <property name="left-attach">2</property>
+                        <property name="top-attach">1</property>
+                      </packing>
+                    </child>
+                    <child>
+                      <object class="GtkSpinButton" id="spbtFadeDuration">
+                        <property name="width-request">50</property>
+                        <property name="visible">True</property>
+                        <property name="can-focus">True</property>
+                        <property name="tooltip-text" translatable="yes">How long it takes to taper from day to night brightness (and vice versa, in minutes)</property>
+                        <property name="halign">center</property>
+                        <property name="valign">center</property>
+                        <property name="margin-start">10</property>
+                        <property name="margin-end">10</property>
+                        <property name="margin-top">10</property>
+                        <property name="margin-bottom">5</property>
+                        <property name="max-length">3</property>
+                        <property name="width-chars">3</property>
+                        <property name="max-width-chars">3</property>
+                        <property name="input-purpose">number</property>
+                        <property name="orientation">vertical</property>
+                        <property name="adjustment">adjFadeDuration</property>
+                        <property name="climb-rate">0.5</property>
+                        <property name="snap-to-ticks">True</property>
+                        <property name="numeric">True</property>
+                        <property name="value">60</property>
+                        <signal name="value-changed" handler="spbtFadeDuration_value_changed_cb" swapped="no"/>
+                      </object>
+                      <packing>
+                        <property name="left-attach">1</property>
+                        <property name="top-attach">1</property>
+                      </packing>
+                    </child>
+                    <child>
+                      <object class="GtkLabel">
+                        <property name="visible">True</property>
+                        <property name="can-focus">False</property>
+                        <property name="margin-start">5</property>
+                        <property name="margin-end">5</property>
+                        <property name="margin-bottom">5</property>
+                        <property name="label" translatable="yes">Fade Duration</property>
+                      </object>
+                      <packing>
+                        <property name="left-attach">1</property>
+                        <property name="top-attach">0</property>
+                      </packing>
+                    </child>
                   </object>
                   <packing>
-                    <property name="left-attach">2</property>
-                    <property name="top-attach">1</property>
+                    <property name="expand">False</property>
+                    <property name="fill">True</property>
+                    <property name="position">0</property>
                   </packing>
                 </child>
                 <child>
-                  <object class="GtkSpinButton" id="spbtFadeDuration">
-                    <property name="width-request">50</property>
+                  <object class="GtkCheckButton" id="cbOpenHidden">
+                    <property name="label" translatable="yes">Start in background</property>
                     <property name="visible">True</property>
                     <property name="can-focus">True</property>
-                    <property name="tooltip-text" translatable="yes">How long it takes to taper from day to night brightness (and vice versa, in minutes)</property>
+                    <property name="receives-default">False</property>
                     <property name="halign">center</property>
-                    <property name="valign">center</property>
-                    <property name="margin-start">10</property>
-                    <property name="margin-end">10</property>
-                    <property name="margin-top">10</property>
-                    <property name="margin-bottom">5</property>
-                    <property name="max-length">3</property>
-                    <property name="width-chars">3</property>
-                    <property name="max-width-chars">3</property>
-                    <property name="input-purpose">number</property>
-                    <property name="orientation">vertical</property>
-                    <property name="adjustment">adjFadeDuration</property>
-                    <property name="climb-rate">0.5</property>
-                    <property name="snap-to-ticks">True</property>
-                    <property name="numeric">True</property>
-                    <property name="value">60</property>
-                    <signal name="value-changed" handler="spbtFadeDuration_value_changed_cb" swapped="no"/>
+                    <property name="draw-indicator">True</property>
+                    <signal name="toggled" handler="cbOpenHidden_toggled_cb" swapped="no"/>
                   </object>
                   <packing>
-                    <property name="left-attach">1</property>
-                    <property name="top-attach">1</property>
-                  </packing>
-                </child>
-                <child>
-                  <object class="GtkLabel">
-                    <property name="visible">True</property>
-                    <property name="can-focus">False</property>
-                    <property name="margin-start">5</property>
-                    <property name="margin-end">5</property>
-                    <property name="margin-bottom">5</property>
-                    <property name="label" translatable="yes">Fade Duration</property>
-                  </object>
-                  <packing>
-                    <property name="left-attach">1</property>
-                    <property name="top-attach">0</property>
+                    <property name="expand">True</property>
+                    <property name="fill">True</property>
+                    <property name="position">1</property>
                   </packing>
                 </child>
               </object>
@@ -761,6 +789,7 @@
                         <property name="wrap">True</property>
                         <property name="update-policy">if-valid</property>
                         <property name="value">20</property>
+                        <signal name="output" handler="pad_zeroes_cb" swapped="no"/>
                         <signal name="value-changed" handler="spbtSunsetHour_value_changed_cb" swapped="no"/>
                       </object>
                       <packing>
@@ -785,6 +814,7 @@
                         <property name="numeric">True</property>
                         <property name="wrap">True</property>
                         <property name="update-policy">if-valid</property>
+                        <signal name="output" handler="pad_zeroes_cb" swapped="no"/>
                         <signal name="value-changed" handler="spbtSunsetMinute_value_changed_cb" swapped="no"/>
                       </object>
                       <packing>
@@ -855,6 +885,7 @@
                         <property name="wrap">True</property>
                         <property name="update-policy">if-valid</property>
                         <property name="value">6</property>
+                        <signal name="output" handler="pad_zeroes_cb" swapped="no"/>
                         <signal name="value-changed" handler="spbtSunriseHour_value_changed_cb" swapped="no"/>
                       </object>
                       <packing>
@@ -879,6 +910,7 @@
                         <property name="numeric">True</property>
                         <property name="wrap">True</property>
                         <property name="update-policy">if-valid</property>
+                        <signal name="output" handler="pad_zeroes_cb" swapped="no"/>
                         <signal name="value-changed" handler="spbtSunriseMinute_value_changed_cb" swapped="no"/>
                       </object>
                       <packing>
