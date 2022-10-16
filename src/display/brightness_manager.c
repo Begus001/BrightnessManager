@@ -15,7 +15,14 @@ static program_config_t *program_config;
 
 bool enabled = false;
 
-void bm_set_enabled(bool val) { enabled = val; }
+static void update();
+
+void bm_set_enabled(bool val)
+{
+	enabled = val;
+	if (val)
+		update();
+}
 
 static void set_brightness_cmd(unsigned int i2c, unsigned int brightness)
 {
