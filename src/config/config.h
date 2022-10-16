@@ -48,6 +48,9 @@ typedef struct {
 	unsigned int i2c6;
 } program_config_t;
 
+bool cfg_is_window_hidden();
+void cfg_set_window_hidden(bool val);
+
 display_config_t *cfg_get_display_configs();
 program_config_t *cfg_get_program_config();
 
@@ -62,7 +65,7 @@ void cfg_notify_display_configs_cancelled();
 void cfg_auto_detect_i2c();
 
 char *cfg_get_ui_path();
-bool cfg_hiding_is_enabled();
+char *cfg_get_config_dir();
 
 void cfg_init();
 

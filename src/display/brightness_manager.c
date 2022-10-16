@@ -126,5 +126,7 @@ void bm_init()
 	display_configs = cfg_get_display_configs();
 	program_config = cfg_get_program_config();
 
+	update();
+
 	pthread_create(&worker, NULL, brightness_worker, NULL);
 }

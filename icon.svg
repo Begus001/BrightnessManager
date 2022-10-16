@@ -7,7 +7,7 @@
    viewBox="0 0 128 128"
    version="1.1"
    id="svg5"
-   inkscape:version="1.1.1 (eb90963e84, 2021-10-02)"
+   inkscape:version="1.1.2 (76b9e6a115, 2022-02-25)"
    sodipodi:docname="icon.svg"
    xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
    xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
@@ -25,12 +25,12 @@
      showgrid="false"
      width="128mm"
      inkscape:zoom="1.2186869"
-     inkscape:cx="336.42768"
+     inkscape:cx="336.83795"
      inkscape:cy="278.57853"
      inkscape:window-width="2488"
      inkscape:window-height="1376"
-     inkscape:window-x="0"
-     inkscape:window-y="0"
+     inkscape:window-x="1352"
+     inkscape:window-y="27"
      inkscape:window-maximized="1"
      inkscape:current-layer="layer1" />
   <defs
@@ -41,14 +41,14 @@
      id="layer1">
     <text
        xml:space="preserve"
-       style="font-style:normal;font-weight:normal;font-size:94.6027px;line-height:1.25;font-family:sans-serif;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.492723"
-       x="-9.2847586"
-       y="98.482872"
+       style="font-style:normal;font-weight:normal;font-size:93.9795px;line-height:1.25;font-family:sans-serif;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.489477"
+       x="-8.0822611"
+       y="96.610886"
        id="text6808"><tspan
          sodipodi:role="line"
          id="tspan6806"
-         style="font-size:94.6027px;fill:#ffffff;stroke-width:0.492723"
-         x="-9.2847586"
-         y="98.482872">BM</tspan></text>
+         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:93.9795px;font-family:Ubuntu;-inkscape-font-specification:Ubuntu;fill:#ffffff;stroke-width:0.489477"
+         x="-8.0822611"
+         y="96.610886">BM</tspan></text>
   </g>
 </svg>

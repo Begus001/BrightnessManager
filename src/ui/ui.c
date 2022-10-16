@@ -1,3 +1,4 @@
+#include <libayatana-appindicator/app-indicator.h>
 #include <stdbool.h>
 #include <stdio.h>
 
@@ -5,8 +6,14 @@
 #include "../display/brightness_manager.h"
 #include "ui.h"
 
+static GtkApplication *app;
+
 static GtkWindow *win_main;
 static GtkBuilder *builder;
+
+static AppIndicator *indicator;
+static GtkMenu *indicator_menu;
+static GtkMenuItem *indicator_menu_item;
 
 static GtkSwitch *sw_enabled;
 
@@ -91,26 +98,35 @@ static void refresh_config()
 	config_changed = false;
 }
 
-bool winMain_delete_event_cb(GtkWidget *widget, GdkEvent *event, gpointer data)
+void ui_show()
 {
-	printf("UI: winMain_delete_event\n");
+	gtk_widget_show_all(GTK_WIDGET(win_main));
+	cfg_set_window_hidden(false);
+	gtk_menu_item_set_label(indicator_menu_item, "Hide");
+}
 
-	if (cfg_hiding_is_enabled()) {
-		printf("UI: Hiding window\n");
-		gtk_widget_hide(GTK_WIDGET(win_main));
-		return true;
+void ui_hide()
+{
+	gtk_widget_hide(GTK_WIDGET(win_main));
+	cfg_set_window_hidden(true);
+	gtk_menu_item_set_label(indicator_menu_item, "Show");
+}
+
+static void toggle_hide()
+{
+	bool hidden = cfg_is_window_hidden();
+	if (hidden) {
+		ui_show();
 	} else {
-		printf("UI: Hiding is disabled due to inaccessability of pipe file, exitting\n");
-		gtk_main_quit();
-		return false;
+		ui_hide();
 	}
 }
 
-void ui_show_win_main()
+bool winMain_delete_event_cb(GtkWidget *widget, GdkEvent *event, gpointer data)
 {
-	printf("UI: Showing window\n");
-
-	gtk_widget_show_all(GTK_WIDGET(win_main));
+	printf("UI: Hiding window\n");
+	toggle_hide();
+	return true;
 }
 
 void btApply_clicked_cb(GtkWidget *widget, gpointer data)
@@ -393,8 +409,38 @@ void spbtManualBrightness_activate_cb(GtkWidget *widget, gpointer data)
 	gtk_widget_grab_focus(widget);
 }
 
-void ui_init()
+void menu_item_activate_cb(GtkMenuItem *item, gpointer data) { toggle_hide(); }
+
+static void quit()
 {
+	exit(0);
+}
+
+void setup_app_indicator()
+{
+	GtkMenuItem *exit_menu_item;
+
+	indicator = app_indicator_new_with_path("brightness-manager", "icon",
+		APP_INDICATOR_CATEGORY_APPLICATION_STATUS, cfg_get_config_dir());
+
+	indicator_menu = GTK_MENU(gtk_menu_new());
+	indicator_menu_item = GTK_MENU_ITEM(gtk_menu_item_new_with_label("Hide"));
+	exit_menu_item = GTK_MENU_ITEM(gtk_menu_item_new_with_label("Exit"));
+	gtk_menu_shell_append(GTK_MENU_SHELL(indicator_menu), GTK_WIDGET(indicator_menu_item));
+	gtk_menu_shell_append(GTK_MENU_SHELL(indicator_menu), GTK_WIDGET(exit_menu_item));
+	gtk_widget_show_all(GTK_WIDGET(indicator_menu));
+
+	g_signal_connect(indicator_menu_item, "activate", G_CALLBACK(menu_item_activate_cb), NULL);
+	g_signal_connect(exit_menu_item, "activate", G_CALLBACK(quit), NULL);
+
+	app_indicator_set_status(indicator, APP_INDICATOR_STATUS_ACTIVE);
+	app_indicator_set_menu(indicator, GTK_MENU(indicator_menu));
+}
+
+void ui_init(GtkApplication *_app)
+{
+	app = _app;
+
 	char *ui_path;
 
 	if (!access(cfg_get_ui_path(), F_OK)) {
@@ -409,6 +455,8 @@ void ui_init()
 	builder = gtk_builder_new_from_file(ui_path);
 
 	win_main = GTK_WINDOW(gtk_builder_get_object(builder, "winMain"));
+
+	setup_app_indicator();
 
 	sw_enabled = GTK_SWITCH(gtk_builder_get_object(builder, "swEnabled"));
 
