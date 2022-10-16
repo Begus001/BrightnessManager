@@ -446,6 +446,7 @@ void setup_app_indicator()
 	indicator_menu_item = GTK_MENU_ITEM(gtk_menu_item_new_with_label("Hide"));
 	exit_menu_item = GTK_MENU_ITEM(gtk_menu_item_new_with_label("Exit"));
 	gtk_menu_shell_append(GTK_MENU_SHELL(indicator_menu), GTK_WIDGET(indicator_menu_item));
+	gtk_menu_shell_append(GTK_MENU_SHELL(indicator_menu), gtk_separator_menu_item_new());
 	gtk_menu_shell_append(GTK_MENU_SHELL(indicator_menu), GTK_WIDGET(exit_menu_item));
 	gtk_widget_show_all(GTK_WIDGET(indicator_menu));
 
