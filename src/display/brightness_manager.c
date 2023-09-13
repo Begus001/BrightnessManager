@@ -15,13 +15,13 @@ static program_config_t *program_config;
 
 bool enabled = false;
 
-static void update();
+void bm_update();
 
 void bm_set_enabled(bool val)
 {
 	enabled = val;
 	if (val)
-		update();
+		bm_update();
 }
 
 static void set_brightness_cmd(unsigned int i2c, unsigned int brightness)
@@ -63,7 +63,7 @@ static unsigned int calculate_brightness_taper_sunset(
 			+ display_configs[display].night_brightness;
 }
 
-static void update()
+void bm_update()
 {
 	printf("BM: Updating brightness\n");
 
@@ -118,7 +118,7 @@ static void *brightness_worker()
 		if (enabled) {
 			if (difftime(time(NULL), start) >= program_config->update_interval) {
 				start = time(NULL);
-				update();
+				bm_update();
 			}
 		}
 	}
@@ -133,7 +133,7 @@ void bm_init()
 	display_configs = cfg_get_display_configs();
 	program_config = cfg_get_program_config();
 
-	update();
+	bm_update();
 
 	pthread_create(&worker, NULL, brightness_worker, NULL);
 }

@@ -11,6 +11,8 @@ void bm_set_enabled(bool val);
 
 void bm_set_brightness(unsigned int display, unsigned int brightness);
 
+void bm_update();
+
 void bm_init();
 
 #endif

@@ -136,6 +136,8 @@ void btApply_clicked_cb(GtkWidget *widget, gpointer data)
 	printf("UI: btApply_clicked\n");
 
 	cfg_notify_display_configs_applied();
+
+	bm_update();
 }
 
 void btCancel_clicked_cb(GtkWidget *widget, gpointer data)
