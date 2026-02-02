@@ -704,12 +704,12 @@
   <object class="GtkImage" id="imgCancel">
     <property name="visible">True</property>
     <property name="can-focus">False</property>
-    <property name="icon-name">dialog-cancel</property>
+    <property name="stock">gtk-cancel</property>
   </object>
   <object class="GtkImage" id="imgOK">
     <property name="visible">True</property>
     <property name="can-focus">False</property>
-    <property name="icon-name">dialog-ok</property>
+    <property name="stock">gtk-apply</property>
   </object>
   <object class="GtkWindow" id="winMain">
     <property name="visible">True</property>
@@ -1151,7 +1151,7 @@
               <object class="GtkImage" id="imgSettings">
                 <property name="visible">True</property>
                 <property name="can-focus">False</property>
-                <property name="icon-name">settings-app-symbolic</property>
+                <property name="stock">gtk-preferences</property>
               </object>
             </child>
           </object>
@@ -1172,7 +1172,7 @@
               <object class="GtkImage" id="imgManual">
                 <property name="visible">True</property>
                 <property name="can-focus">False</property>
-                <property name="icon-name">display</property>
+                <property name="stock">gtk-network</property>
               </object>
             </child>
           </object>
