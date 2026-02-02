@@ -135,5 +135,5 @@ void bm_init()
 
 	bm_update();
 
-	pthread_create(&worker, NULL, brightness_worker, NULL);
+	pthread_create(&worker, NULL, (void *)brightness_worker, NULL);
 }

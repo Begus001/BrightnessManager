@@ -118,7 +118,7 @@ static void toggle_hide()
 {
 	bool hidden = cfg_is_window_hidden();
 	if (hidden) {
-		ui_show(false);
+		ui_show();
 	} else {
 		ui_hide();
 	}
