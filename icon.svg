@@ -7,7 +7,7 @@
    viewBox="0 0 128 128"
    version="1.1"
    id="svg5"
-   inkscape:version="1.1.2 (76b9e6a115, 2022-02-25)"
+   inkscape:version="1.4.3 (0d15f75042, 2025-12-25)"
    sodipodi:docname="icon.svg"
    xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
    xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
@@ -24,15 +24,17 @@
      inkscape:document-units="mm"
      showgrid="false"
      width="128mm"
-     inkscape:zoom="1.2186869"
-     inkscape:cx="336.83795"
-     inkscape:cy="278.57853"
-     inkscape:window-width="2488"
-     inkscape:window-height="1376"
-     inkscape:window-x="1352"
-     inkscape:window-y="27"
+     inkscape:zoom="2.4373738"
+     inkscape:cx="136.00704"
+     inkscape:cy="206.16452"
+     inkscape:window-width="5120"
+     inkscape:window-height="2747"
+     inkscape:window-x="2560"
+     inkscape:window-y="84"
      inkscape:window-maximized="1"
-     inkscape:current-layer="layer1" />
+     inkscape:current-layer="layer1"
+     inkscape:showpageshadow="0"
+     inkscape:deskcolor="#505050" />
   <defs
      id="defs2" />
   <g
@@ -41,14 +43,14 @@
      id="layer1">
     <text
        xml:space="preserve"
-       style="font-style:normal;font-weight:normal;font-size:93.9795px;line-height:1.25;font-family:sans-serif;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.489477"
-       x="-8.0822611"
-       y="96.610886"
+       style="font-style:normal;font-weight:normal;font-size:77.036px;line-height:1.25;font-family:sans-serif;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.401231"
+       x="4.0275025"
+       y="91.501877"
        id="text6808"><tspan
          sodipodi:role="line"
          id="tspan6806"
-         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:93.9795px;font-family:Ubuntu;-inkscape-font-specification:Ubuntu;fill:#ffffff;stroke-width:0.489477"
-         x="-8.0822611"
-         y="96.610886">BM</tspan></text>
+         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:77.036px;font-family:Ubuntu;-inkscape-font-specification:Ubuntu;fill:#ffffff;stroke-width:0.401231"
+         x="4.0275025"
+         y="91.501877">BM</tspan></text>
   </g>
 </svg>
