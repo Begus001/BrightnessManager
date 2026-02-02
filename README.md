@@ -4,7 +4,9 @@ Have you ever wondered why you can't fall asleep at night? For only 9.99 you can
 
 No, but seriously, BrightnessManager is an application for Linux, which changes the backlighting or luminescence of your monitor based on a time schedule. Ever since I first found out that you can control some display's brightness through software via I2C, I've always wanted something like this. It is the perfect complement to the night light or blue light filter feature offered by some OSes/desktop environments.
 
-<img src="http://begus.ddns.net/img/bm-prev.png" width="33%"><img src="http://begus.ddns.net/img/bm-prev-manual.png" width="33%"><img src="http://begus.ddns.net/img/bm-prev-settings.png" width="33%">
+<img src="media/bm-prev.png" width="32%" style="margin-right: 1%">
+<img src="media/bm-prev-manual.png" width="32%" style="margin-right: 1%">
+<img src="media/bm-prev-settings.png" width="32%">
 
 
 # Contents
