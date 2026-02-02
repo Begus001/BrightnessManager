@@ -343,7 +343,7 @@ void cfg_auto_detect_i2c()
 
 	printf("CFG: Auto-detecting I2C busses\n");
 
-	pipe = popen("sudo ddccontrol -p 2>/dev/null | grep \"Device: dev:/dev/i2c-\"", "r");
+	pipe = popen("ddccontrol -p 2>/dev/null | grep \"Device: dev:/dev/i2c-\"", "r");
 
 	assert(pipe && "Couldn't open pipe to process (auto-detection failed)");
 
